@@ -1,4 +1,5 @@
 generated/
+node_modules/karma/
 tscFiles.txt
 Gefin.sln
 Gefin.v12.suo
