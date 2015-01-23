@@ -1,0 +1,32 @@
+declare module "jake-typescript"
+{
+    export enum ModuleKind {
+        commonjs = 0,
+        amd = 1,
+    }
+
+    export enum ESVersion {
+        ES3 = 0,
+        ES5 = 1,
+    }
+
+    export interface CompileOptions {
+        generateDeclarationFile?: boolean;
+        moduleKind?: ModuleKind;
+        noImplicitAny?: boolean;
+        removeComments?: boolean;
+        generateSourceMap?: boolean;
+        sourceRoot?: string;
+        mapRoot?: string;
+        targetVersion?: ESVersion;
+    }
+
+    export interface BatchCompileOptions extends CompileOptions {
+        outputDirectory?: string;
+    }
+
+    export function isTsDeclarationFile(filename: string): boolean;
+    export function isTsFile(filename: string): boolean;
+    export function singleFile(name: string, prereqs: string[], opts?: CompileOptions): jake.FileTask;
+    export function batchFiles(name: string, prereqs: string[], opts?: BatchCompileOptions): jake.Task;
+}
