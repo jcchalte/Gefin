@@ -32,6 +32,7 @@ describe("Serveur >", () => {
             httpTextGet("http://localhost:8080", (response, data) => {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
+                response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
                 done();
             });
         });
@@ -102,7 +103,7 @@ describe("Serveur >", () => {
 
 });
 
-function httpTextGet(url: string, callback: (response: http.ServerResponse, responseData: string) => void) {
+function httpTextGet(url: string, callback: (response: http.ClientResponse, responseData: string) => void) {
     http.get(url, (response) => {
         var data = "";
         response.setEncoding('utf8');

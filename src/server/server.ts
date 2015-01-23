@@ -57,6 +57,7 @@ class Server {
     private serveFile(response: http.ServerResponse, filePath: string) {
         fs.readFile(filePath, (err, data) => {
             if (err) throw err;
+            response.setHeader("content-type", "text/html; charset=UTF-8");
             response.end(data);
         });
     }

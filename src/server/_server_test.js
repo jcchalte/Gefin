@@ -27,6 +27,7 @@ describe("Serveur >", function () {
             httpTextGet("http://localhost:8080", function (response, data) {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
+                response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
                 done();
             });
         });
