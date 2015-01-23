@@ -1,5 +1,4 @@
 ﻿/// <reference path="../Scripts/GlobalReferences.d.ts"/>
-var assert = require("assert");
 var child_process = require("child_process");
 var http = require("http");
 require("should");
