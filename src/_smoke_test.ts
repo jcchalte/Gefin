@@ -9,7 +9,7 @@ describe("Smoke testing >", () => {
     describe("Cas classiques >", () => {
         var childProcess;
         before((done) => {
-            childProcess = runServer("node src/server/Gefin 8082", () => {
+            childProcess = runServer("node Server 8082", () => {
                 done();
             });
         });
@@ -48,7 +48,7 @@ function runServer(command: string, done: () => void): child_process.ChildProces
     childProcess.stdout.setEncoding('utf8');
 
     childProcess.stdout.on("data", (chunk: string) => {
-        if (chunk.trim().indexOf("Server Ready to serve...") >= 0)
+        if (chunk.trim().indexOf("Server Ready to serve") >= 0)
             done();
     });
     childProcess.stderr.on("data", (chunk) => {

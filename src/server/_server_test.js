@@ -36,6 +36,7 @@ describe("Serveur >", function () {
             httpTextGet("http://localhost:8080/Index", function (response, data) {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
+                response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
                 done();
             });
         });
@@ -44,6 +45,7 @@ describe("Serveur >", function () {
             httpTextGet("http://localhost:8080/BlaBlaBla", function (response, data) {
                 response.statusCode.should.equal(404);
                 data.indexOf(expectedData404).should.not.be.lessThan(0);
+                response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
                 done();
             });
         });
