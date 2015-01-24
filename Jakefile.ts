@@ -1,12 +1,12 @@
 /// <reference path="Scripts/GlobalReferences.d.ts"/>
 import fs = require("fs");
 
-task("default", ["Typescript","test", "node"], () => {
+task("default", ["Typescript", "test", "node"], () => {
 });
 
 // ReSharper disable InconsistentNaming
 var GENERATED_DIR = "generated";
-var TEMP_TESTFILE_DIR = GENERATED_DIR+"/test";
+var TEMP_TESTFILE_DIR = GENERATED_DIR + "/test";
 // ReSharper restore InconsistentNaming
 
 directory(TEMP_TESTFILE_DIR);
@@ -18,7 +18,7 @@ task("Typescript", ["TypescriptArgumentFile"], () => {
     var stdout = "";
     var stderr = "";
     var childProcess = jake.createExec(command, { printStdout: true, printStderr: true });
-    
+
     childProcess.on("stdout", (chunk) => {
         stdout += chunk;
     });
@@ -26,7 +26,7 @@ task("Typescript", ["TypescriptArgumentFile"], () => {
         stderr += chunk;
     });
     childProcess.on("error", (chunk) => {
-        console.log("error ! "+chunk);
+        console.log("error ! " + chunk);
     });
     childProcess.on("cmdEnd", () => {
         if (stderr)
@@ -38,7 +38,7 @@ task("Typescript", ["TypescriptArgumentFile"], () => {
         }
     });
     childProcess.run();
-}, {async:true});
+}, { async: true });
 
 task("TypescriptArgumentFile", [], () => {
     var tsFileList = new jake.FileList();
@@ -55,11 +55,14 @@ task("clean", [], () => {
     jake.rmRf(GENERATED_DIR);
 });
 
+var testsFileList = new jake.FileList();
+testsFileList.include("**/_*_test.ts");
+testsFileList.exclude("node_modules");
 var mocha = require('jake-mocha');
 mocha.defineTask(
     {
         name: 'test',
-        files: '**/_*_test.js',
+        files: ['src/server/**/_*_test.js', 'src/_*_test.js'],
         mochaOptions: {
             ui: 'bdd',
             reporter: 'nyan'
@@ -77,7 +80,7 @@ task("node", () => {
     var process = jake.createExec(command, { printStdout: true, printStderr: true });
     process.on("stdout", (chunk) => {
         stdout += chunk;
-        
+
     });
     process.on("cmdEnd", () => {
         if (stdout.indexOf(desiredNodeVersion) !== 0) {
@@ -85,9 +88,10 @@ task("node", () => {
         }
         console.log("OK!");
         console.log();
+        console.log();
         complete();
     });
     process.run();
 
-});
+}, { async: true });
 

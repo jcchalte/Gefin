@@ -54,10 +54,13 @@ task("clean", [], function () {
     jake.rmRf(GENERATED_DIR);
 });
 
+var testsFileList = new jake.FileList();
+testsFileList.include("**/_*_test.ts");
+testsFileList.exclude("node_modules");
 var mocha = require('jake-mocha');
 mocha.defineTask({
     name: 'test',
-    files: '**/_*_test.js',
+    files: ['src/server/**/_*_test.js', 'src/_*_test.js'],
     mochaOptions: {
         ui: 'bdd',
         reporter: 'nyan'
@@ -81,7 +84,8 @@ task("node", function () {
         }
         console.log("OK!");
         console.log();
+        console.log();
         complete();
     });
     process.run();
-});
+}, { async: true });
