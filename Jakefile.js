@@ -138,20 +138,22 @@ var TestTasks;
 
     desc("Lancement des tests clients");
     task("testClient", ["Typescript"], function () {
-        console.log("Karma client test");
-        var karmaConfigurationFileContent = 'module.exports = function (config) {config.set(' + JSON.stringify(Configurations.Karma.runnerOptions) + ');};';
+        var runner = require('karma').runner;
 
-        fs.writeFileSync("generated/karma.conf.js", karmaConfigurationFileContent);
+        var oldStdOutputWrite = process.stdout.write;
+        var karmaOutput = "";
+        process.stdout.write = function (buffer) {
+            karmaOutput += buffer;
+            oldStdOutputWrite.apply(this, arguments);
+        };
 
-        Helpers.executeCommand("karma run generated/karma.conf.js", true, function (stdout, stderr) {
-            KarmaHelpers.assertAllBrowsersAreTested(stdout);
-            console.log("OK !");
-            console.log();
-            complete();
-        }, function (stdout, stderr) {
-            console.log("Failed !");
-            console.log();
-            fail();
+        runner.run(Configurations.Karma.runnerOptions, function (exitCode) {
+            if (exitCode)
+                fail("Karma has exited with exit code " + exitCode);
+            else {
+                KarmaHelpers.assertAllBrowsersAreTested(karmaOutput);
+                complete();
+            }
         });
     }, { async: true });
 
@@ -168,8 +170,8 @@ var TestTasks;
                 }
             });
 
-            if (untestedBrowsers.length > 0) {
-                console.log(untestedBrowsers.join(", ") + " are not tested");
+            if (untestedBrowsers.length > 0 && !process.env['loose']) {
+                console.log(untestedBrowsers.join(", ") + " are not tested (Use 'loose=true' to skip that test)");
                 fail();
             }
         }

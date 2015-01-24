@@ -137,21 +137,25 @@ module TestTasks {
 
     desc("Lancement des tests clients");
     task("testClient", ["Typescript"], () => {
-        console.log("Karma client test");
-        var karmaConfigurationFileContent = 'module.exports = function (config) {config.set(' + JSON.stringify(Configurations.Karma.runnerOptions) + ');};';
 
-        fs.writeFileSync("generated/karma.conf.js", karmaConfigurationFileContent);
+        var runner = require('karma').runner;
 
-        Helpers.executeCommand("karma run generated/karma.conf.js", true, (stdout, stderr) => {
-            KarmaHelpers.assertAllBrowsersAreTested(stdout);
-            console.log("OK !");
-            console.log();
-            complete();
-        }, (stdout, stderr) => {
-                console.log("Failed !");
-                console.log();
-                fail();
-            });
+        var oldStdOutputWrite = process.stdout.write;
+        var karmaOutput = "";
+        process.stdout.write = <{ (buffer: Buffer, cb?: Function): boolean;(str: string, cb?: Function): boolean;(str: string, encoding?: string, cb?: Function): boolean }>function(buffer){
+            karmaOutput += buffer;
+            oldStdOutputWrite.apply(this, arguments);
+        };
+
+        runner.run(Configurations.Karma.runnerOptions, (exitCode) => {
+            if (exitCode)
+                fail("Karma has exited with exit code " + exitCode);
+            else {
+                KarmaHelpers.assertAllBrowsersAreTested(karmaOutput);
+                complete();
+            }
+        });
+
     }, { async: true });
 
     module KarmaHelpers {
@@ -166,8 +170,8 @@ module TestTasks {
                 }
             });
 
-            if (untestedBrowsers.length > 0) {
-                console.log(untestedBrowsers.join(", ") + " are not tested");
+            if (untestedBrowsers.length > 0 && !process.env['loose']) {
+                console.log(untestedBrowsers.join(", ") + " are not tested (Use 'loose=true' to skip that test)");
                 fail();
             }
         }
