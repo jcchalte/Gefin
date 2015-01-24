@@ -5,6 +5,9 @@ require("should");
 var http = require("http");
 var fs = require("fs");
 
+var BASE_PORT = 8080;
+var BASE_URL = "http://localhost:" + BASE_PORT;
+
 describe("Serveur >", function () {
     describe("Cas classiques >", function () {
         var myServer;
@@ -16,7 +19,7 @@ describe("Serveur >", function () {
 
         before(function (done) {
             myServer = new server();
-            myServer.start(8080, testFile, testErrorFile, function () {
+            myServer.start(BASE_PORT, testFile, testErrorFile, function () {
                 fs.writeFileSync(testFile, expectedData);
                 fs.writeFileSync(testErrorFile, expectedData404);
                 done();
@@ -24,7 +27,7 @@ describe("Serveur >", function () {
         });
 
         it('Server renvoit un fichier sur la page de garde', function (done) {
-            httpTextGet("http://localhost:8080", function (response, data) {
+            httpTextGet(BASE_URL, function (response, data) {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
                 response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
@@ -33,7 +36,7 @@ describe("Serveur >", function () {
         });
 
         it('Server renvoit un fichier sur index.html', function (done) {
-            httpTextGet("http://localhost:8080/Index", function (response, data) {
+            httpTextGet(BASE_URL, function (response, data) {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
                 response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
@@ -42,7 +45,7 @@ describe("Serveur >", function () {
         });
 
         it('Server renvoit une erreur 404 dans les autres pages', function (done) {
-            httpTextGet("http://localhost:8080/BlaBlaBla", function (response, data) {
+            httpTextGet(BASE_URL + "/bargle", function (response, data) {
                 response.statusCode.should.equal(404);
                 data.indexOf(expectedData404).should.not.be.lessThan(0);
                 response.headers["content-type"].indexOf("text/html").should.not.be.lessThan(0);
@@ -69,7 +72,7 @@ describe("Serveur >", function () {
         it("Démarrer un serveur sans un fichier à service n'est pas possible", function () {
             var myServer = new server();
             assert.throws(function () {
-                myServer.start(8080, null, null, function () {
+                myServer.start(BASE_PORT, null, null, function () {
                 });
             }, "Une homepage est nécessaire");
         });
@@ -77,17 +80,17 @@ describe("Serveur >", function () {
         it("Démarrer un serveur sans un fichier d'erreur à service n'est pas possible", function () {
             var myServer = new server();
             assert.throws(function () {
-                myServer.start(8080, "test.html", null, function () {
+                myServer.start(BASE_PORT, "test.html", null, function () {
                 });
             }, "Un fichier d'erreur est nécessaire");
         });
 
         it("Démarrer un serveur alors qu\'il est déjà démarré n'est pas possible", function () {
             var myServer = new server();
-            myServer.start(8080, "test.html", "404.html", function () {
+            myServer.start(BASE_PORT, "test.html", "404.html", function () {
             });
             assert.throws(function () {
-                myServer.start(8080, "test.html", "404.html", function () {
+                myServer.start(BASE_PORT, "test.html", "404.html", function () {
                 });
             }, "Il ne doit pas être possible de redémarrer le serveur s'il est déjà démarré");
 

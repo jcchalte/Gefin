@@ -1,91 +1,236 @@
-/// <reference path="Scripts/GlobalReferences.d.ts"/>
+﻿/// <reference path="Scripts/GlobalReferences.d.ts"/>
 var fs = require("fs");
 
-task("default", ["Typescript", "test", "node"], function () {
+desc("Default task for everything");
+task("default", ["Typescript", "testServerCode", "testClient", "node"], function () {
 });
 
-// ReSharper disable InconsistentNaming
-var GENERATED_DIR = "generated";
-var TEMP_TESTFILE_DIR = GENERATED_DIR + "/test";
+var Configurations;
+(function (Configurations) {
+    (function (Node) {
+        Node.desiredVersion = "v0.10.25";
+    })(Configurations.Node || (Configurations.Node = {}));
+    var Node = Configurations.Node;
 
-// ReSharper restore InconsistentNaming
-directory(TEMP_TESTFILE_DIR);
+    (function (TempDirectories) {
+        TempDirectories.generatedDir = "generated";
+        TempDirectories.tempTestfileDir = TempDirectories.generatedDir + "/test";
+    })(Configurations.TempDirectories || (Configurations.TempDirectories = {}));
+    var TempDirectories = Configurations.TempDirectories;
 
-task("Typescript", ["TypescriptArgumentFile"], function () {
-    console.log("compilation Typescript...");
+    (function (Karma) {
+        Karma.runnerOptions = {
+            basePath: '.',
+            frameworks: ['mocha', 'requirejs'],
+            files: [
+                'node_modules/expect.js/index.js',
+                'src/client/_*_test.js'
+            ],
+            exclude: [],
+            preprocessors: {},
+            reporters: ['dot'],
+            port: 9876,
+            colors: true,
+            autoWatch: false,
+            browsers: [],
+            singleRun: false
+        };
 
-    var command = "tsc --module commonJS @tscFiles.txt";
-    var stdout = "";
-    var stderr = "";
-    var childProcess = jake.createExec(command, { printStdout: true, printStderr: true });
+        Karma.supportedBrowsers = [
+            {
+                name: "IE8.0",
+                karmaOutputRegex: /IE 8\.0.*: Executed/
+            },
+            {
+                name: "IE9.0",
+                karmaOutputRegex: /IE 9\.0.*: Executed/
+            },
+            {
+                name: "IE10.0",
+                karmaOutputRegex: /IE 10\.0.*: Executed/
+            },
+            {
+                name: "IE11.0",
+                karmaOutputRegex: /IE 11\.0.*: Executed/
+            },
+            {
+                name: "Firefox",
+                karmaOutputRegex: /Firefox .*: Executed/
+            },
+            {
+                name: "Chrome",
+                karmaOutputRegex: /Chrome .*: Executed/
+            }
+        ];
+    })(Configurations.Karma || (Configurations.Karma = {}));
+    var Karma = Configurations.Karma;
+})(Configurations || (Configurations = {}));
 
-    childProcess.on("stdout", function (chunk) {
-        stdout += chunk;
+var TypescriptTasks;
+(function (TypescriptTasks) {
+    desc("Compilation des tous les typescript");
+    task("Typescript", ["TypescriptClient", "TypescriptServer"]);
+
+    desc("Compilation des typescript client");
+    task("TypescriptClient", ["TypescriptClientArgumentFile"], function () {
+        console.log("compilation Typescript client...");
+        Helpers.executeCommand("tsc --module AMD @tscClientFiles.txt", true, complete, fail);
+    }, { async: true });
+
+    desc("Création @tscClientFiles");
+    task("TypescriptClientArgumentFile", [], function () {
+        Helpers.writeFileNamesToFile("tscClientFiles.txt", ["src/client/**/*.ts"], ["node_modules"]);
     });
-    childProcess.on("stderr", function (chunk) {
-        stderr += chunk;
+
+    desc("Compilation des typescript server");
+    task("TypescriptServer", ["TypescriptServerArgumentFile"], function () {
+        console.log("compilation Typescript serveur...");
+        Helpers.executeCommand("tsc --module commonJS @tscServerFiles.txt", true, complete, fail);
+    }, { async: true });
+
+    desc("Création @tscServerFiles");
+    task("TypescriptServerArgumentFile", [], function () {
+        Helpers.writeFileNamesToFile("tscServerFiles", ["**/*.ts"], ["src/client", "node_modules"]);
     });
-    childProcess.on("error", function (chunk) {
-        console.log("error ! " + chunk);
+})(TypescriptTasks || (TypescriptTasks = {}));
+
+var CleanTasks;
+(function (CleanTasks) {
+    var GeneratedDir = Configurations.TempDirectories.generatedDir;
+    desc("Suppression des fichiers temporaires");
+    task("clean", [], function () {
+        jake.rmRf(GeneratedDir);
     });
-    childProcess.on("cmdEnd", function () {
-        if (stderr)
-            fail("Erreur TSC : " + stderr);
-        else {
+})(CleanTasks || (CleanTasks = {}));
+
+var TestTasks;
+(function (TestTasks) {
+    var TempTestfileDir = Configurations.TempDirectories.tempTestfileDir;
+    desc("Test everything");
+    task('test', ["testServerCode", "testClient"]);
+
+    directory(TempTestfileDir);
+    task("beforeTest", [TempTestfileDir, "node"], function () {
+        console.log("Mocha server test");
+    });
+
+    var testsFileList = new jake.FileList();
+    testsFileList.include("**/_*_test.js");
+    testsFileList.exclude("node_modules");
+    testsFileList.exclude("src/client");
+    var mocha = require('jake-mocha');
+
+    mocha.defineTask({
+        name: 'testServerBody',
+        description: 'Lancement des tests servers',
+        files: testsFileList.toArray(),
+        mochaOptions: {
+            ui: 'bdd',
+            reporter: 'nyan'
+        },
+        prerequisites: ["beforeTest", "Typescript"]
+    });
+    desc("Lancement des tests serveurs");
+    task("testServerCode", ["testServerBody"], function () {
+        console.log("OK !");
+        console.log();
+    });
+
+    desc("Lancement des tests clients");
+    task("testClient", ["Typescript"], function () {
+        console.log("Karma client test");
+        var karmaConfigurationFileContent = 'module.exports = function (config) {config.set(' + JSON.stringify(Configurations.Karma.runnerOptions) + ');};';
+
+        fs.writeFileSync("generated/karma.conf.js", karmaConfigurationFileContent);
+
+        Helpers.executeCommand("karma run generated/karma.conf.js", true, function (stdout, stderr) {
+            KarmaHelpers.assertAllBrowsersAreTested(stdout);
             console.log("OK !");
             console.log();
             complete();
+        }, function (stdout, stderr) {
+            console.log("Failed !");
+            console.log();
+            fail();
+        });
+    }, { async: true });
+
+    var KarmaHelpers;
+    (function (KarmaHelpers) {
+        function assertAllBrowsersAreTested(karmaOutput) {
+            var untestedBrowsers = [];
+
+            Configurations.Karma.supportedBrowsers.forEach(function (browser) {
+                var passed = browser.karmaOutputRegex.test(karmaOutput);
+
+                if (!passed) {
+                    untestedBrowsers.push(browser.name);
+                }
+            });
+
+            if (untestedBrowsers.length > 0) {
+                console.log(untestedBrowsers.join(", ") + " are not tested");
+                fail();
+            }
         }
-    });
-    childProcess.run();
-}, { async: true });
+        KarmaHelpers.assertAllBrowsersAreTested = assertAllBrowsersAreTested;
+    })(KarmaHelpers || (KarmaHelpers = {}));
+})(TestTasks || (TestTasks = {}));
 
-task("TypescriptArgumentFile", [], function () {
-    var tsFileList = new jake.FileList();
-    tsFileList.include("**/*.ts");
-    tsFileList.exclude("node_modules");
-    var tsFiles = tsFileList.toArray().join(" ");
-    fs.writeFileSync("tscFiles.txt", tsFiles);
-});
+var Utility;
+(function (Utility) {
+    task("node", function () {
+        console.log("detection de Node.js...");
 
-task("beforeTest", [TEMP_TESTFILE_DIR]);
+        Helpers.executeCommand("node --version", false, function (stdout) {
+            if (stdout.indexOf(Configurations.Node.desiredVersion) !== 0) {
+                fail("Incorrect node version. Expected " + Configurations.Node.desiredVersion + ", found " + stdout);
+            } else
+                complete();
+        }, fail);
+    }, { async: true });
+})(Utility || (Utility = {}));
 
-task("clean", [], function () {
-    jake.rmRf(GENERATED_DIR);
-});
+var Helpers;
+(function (Helpers) {
+    function executeCommand(command, pipeOutputs, complete, fail) {
+        var stdout = "";
+        var stderr = "";
+        var childProcess = jake.createExec(command, { printStdout: true, printStderr: true });
+        childProcess.on("stdout", function (chunk) {
+            if (pipeOutputs)
+                process.stdout.write(chunk);
+            stdout += chunk;
+        });
+        childProcess.on("stderr", function (chunk) {
+            if (pipeOutputs)
+                process.stderr.write(chunk);
+            stderr += chunk;
+        });
+        childProcess.on("error", function (chunk) {
+            process.stderr.write(chunk);
+            fail(stdout, stderr);
+        });
+        childProcess.on("cmdEnd", function () {
+            complete(stdout, stderr);
+        });
+        childProcess.run();
+    }
+    Helpers.executeCommand = executeCommand;
 
-var testsFileList = new jake.FileList();
-testsFileList.include("**/_*_test.ts");
-testsFileList.exclude("node_modules");
-var mocha = require('jake-mocha');
-mocha.defineTask({
-    name: 'test',
-    files: ['src/server/**/_*_test.js', 'src/_*_test.js'],
-    mochaOptions: {
-        ui: 'bdd',
-        reporter: 'nyan'
-    },
-    prerequisites: ["beforeTest", "Typescript", "node"]
-});
+    function writeFileNamesToFile(fileName, includes, excludes) {
+        var fileList = new jake.FileList();
+        if (includes != null)
+            includes.forEach(function (include) {
+                fileList.include(include);
+            });
+        if (excludes != null)
+            excludes.forEach(function (exclude) {
+                fileList.exclude(exclude);
+            });
 
-task("node", function () {
-    console.log("detection de Node.js...");
-    var desiredNodeVersion = "v0.10.25";
-
-    var command = "node --version";
-    var stdout = "";
-    var process = jake.createExec(command, { printStdout: true, printStderr: true });
-    process.on("stdout", function (chunk) {
-        stdout += chunk;
-    });
-    process.on("cmdEnd", function () {
-        if (stdout.indexOf(desiredNodeVersion) !== 0) {
-            fail("Incorrect node version. Expected " + desiredNodeVersion + ", found " + stdout);
-        }
-        console.log("OK!");
-        console.log();
-        console.log();
-        complete();
-    });
-    process.run();
-}, { async: true });
+        var fileContent = fileList.toArray().join(" ");
+        fs.writeFileSync(fileName, fileContent);
+    }
+    Helpers.writeFileNamesToFile = writeFileNamesToFile;
+})(Helpers || (Helpers = {}));
