@@ -1,8 +1,10 @@
 ﻿/// <reference path="Scripts/GlobalReferences.d.ts"/>
 var fs = require("fs");
+var cliColor = require("cli-color");
 
 desc("Default task for everything");
 task("default", ["Typescript", "testServerCode", "testClient", "node"], function () {
+    console.log(cliColor.green("\n\nOK !"));
 });
 
 var Configurations;

@@ -5,3 +5,4 @@
 /// <reference path="typings/mocha/mocha.d.ts"/>
 /// <reference path="typings/should/should.d.ts"/>
 /// <reference path="typings/expect.js/expect.js.d.ts"/>
+/// <reference path="typings/cli-color/cli-color.d.ts"/>
