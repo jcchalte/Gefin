@@ -6,3 +6,10 @@ Gefin.v12.suo
 /tscClientFiles.txt
 /tscServerFiles
 /tscServerFiles.txt
+/bin
+/obj/Debug
+/packages
+/src/server/server.js.map
+/Jakefile.js.map
+/Server.js.map
+*.user
