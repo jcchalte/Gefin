@@ -22,18 +22,29 @@ module Configurations {
     export module Karma {
         export var runnerOptions = {
             basePath: '.',
+            // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
             frameworks: ['mocha', 'requirejs'],
+            // list of files / patterns to load in the browser
             files: [
-                'node_modules/expect.js/index.js',
-                'src/client/_*_test.js'
+                { pattern: 'node_modules/expect.js/index.js', included: true },
+                { pattern: 'Scripts/array.generics.js', included: true },
+                { pattern: 'test-main.js', included: true },
+                { pattern: 'src/client/_*_test.js', included: false },
+                { pattern: 'src/client/*.js', included: false }
             ],
+            // list of files to exclude
             exclude: [
             ],
+            // preprocess matching files before serving them to the browser
             preprocessors: {
+
             },
-            reporters: ['dot'],
+            reporters: ['progress'],
+            // web server port
             port: 9876,
+            // enable / disable colors in the output (reporters and logs)
             colors: true,
+            // enable / disable watching file and executing tests whenever any file changes
             autoWatch: false,
             browsers: [],
             singleRun: false
@@ -70,6 +81,7 @@ module Configurations {
 }
 
 module TypescriptTasks {
+
     desc("Compilation des tous les typescript");
     task("Typescript", ["TypescriptClient", "TypescriptServer"]);
 
@@ -92,7 +104,8 @@ module TypescriptTasks {
 
     desc("Création @tscServerFiles");
     task("TypescriptServerArgumentFile", [], () => {
-        Helpers.writeFileNamesToFile("tscServerFiles", ["**/*.ts"], ["src/client", "node_modules"]);
+
+        Helpers.writeFileNamesToFile("tscServerFiles.txt", ["**/*.ts"], ["src/client", "node_modules", "packages"]);
     });
 }
 
@@ -139,25 +152,31 @@ module TestTasks {
 
     desc("Lancement des tests clients");
     task("testClient", ["Typescript"], () => {
+        var karmaConfJSExpectedContent = "module.exports = function(config) {config.set(" + JSON.stringify(Configurations.Karma.runnerOptions) + ");};";
 
-        var runner = require('karma').runner;
+        var currentkarmaConfJSContent = fs.readFileSync("karma.conf.js", "utf8");
+        if (currentkarmaConfJSContent !== karmaConfJSExpectedContent) {
+            fs.writeFileSync("karma.conf.js", karmaConfJSExpectedContent);
+            fail("karma.conf.js" + " content was changed. Server probably needs reset. Reset the server then start jake again.");
+        } else {
+            var runner = require('karma').runner;
 
-        var oldStdOutputWrite = process.stdout.write;
-        var karmaOutput = "";
-        process.stdout.write = <{ (buffer: Buffer, cb?: Function): boolean;(str: string, cb?: Function): boolean;(str: string, encoding?: string, cb?: Function): boolean }>function(buffer){
-            karmaOutput += buffer;
-            oldStdOutputWrite.apply(this, arguments);
-        };
+            var oldStdOutputWrite = process.stdout.write;
+            var karmaOutput = "";
+            process.stdout.write = <{ (buffer: Buffer, cb?: Function): boolean; (str: string, cb?: Function): boolean; (str: string, encoding?: string, cb?: Function): boolean }>function (buffer) {
+                karmaOutput += buffer;
+                oldStdOutputWrite.apply(this, arguments);
+            };
 
-        runner.run(Configurations.Karma.runnerOptions, (exitCode) => {
-            if (exitCode)
-                fail("Karma has exited with exit code " + exitCode);
-            else {
-                KarmaHelpers.assertAllBrowsersAreTested(karmaOutput);
-                complete();
-            }
-        });
-
+            runner.run(Configurations.Karma.runnerOptions, (exitCode) => {
+                if (exitCode)
+                    fail("Karma has exited with exit code " + exitCode);
+                else {
+                    KarmaHelpers.assertAllBrowsersAreTested(karmaOutput);
+                    complete();
+                }
+            });
+        }
     }, { async: true });
 
     module KarmaHelpers {
