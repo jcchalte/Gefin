@@ -1,14 +1,15 @@
 ﻿import AggregateRepository = require("./AggregateRepository");
 import Infrastructure = require("./Infrastructure");
- import Immutables = require("../Shared/Immutables/Immutables");
+ import Immutables = require("../Immutables/Immutables");
 
  export = IAggregateRepository
  interface IAggregateRepository {
-     getAggregateByID(typeAggregate: Infrastructure.AggregateType, idAggregate: Immutables.Guid): Infrastructure.IAggregate;
+     getAggregateById(typeAggregate: Infrastructure.AggregateType, idAggregate: Immutables.Guid): Infrastructure.IAggregate;
 
      commitEvents(aggregate:Infrastructure.IAggregate):void;
  }
 
+// ReSharper disable once InconsistentNaming
 module IAggregateRepository {
     var aggregateRepository = new AggregateRepository();
 

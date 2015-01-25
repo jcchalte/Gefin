@@ -1,8 +1,8 @@
 ﻿var Infrastructure = require("./Infrastructure");
 
 var InMemoryEventRepository = require("./InMemoryEventRepository");
-var PropositionRepas = require("../Aggregate/PropositionRepas");
-var CompteUtilisateur = require("../Aggregate/CompteUtilisateur");
+var PropositionRepas = require("../Repas/Aggregate/PropositionRepas");
+var CompteUtilisateur = require("../Administration/Aggregate/CompteUtilisateur");
 
 var AggregateRepository = (function () {
     function AggregateRepository() {

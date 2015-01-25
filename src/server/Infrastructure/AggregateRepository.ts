@@ -1,10 +1,10 @@
 ﻿import IAggregateRepository = require("./IAggregateRepository");
 import Infrastructure = require("./Infrastructure");
-import Immutables = require("../Shared/Immutables/Immutables");
+import Immutables = require("../Immutables/Immutables");
 import IEventRepository = require("./IEventRepository");
 import InMemoryEventRepository = require("./InMemoryEventRepository");
-import PropositionRepas = require("../Aggregate/PropositionRepas");
-import CompteUtilisateur = require("../Aggregate/CompteUtilisateur");
+import PropositionRepas = require("../Repas/Aggregate/PropositionRepas");
+import CompteUtilisateur = require("../Administration/Aggregate/CompteUtilisateur");
 
  export = AggregateRepository
  class AggregateRepository implements IAggregateRepository {
@@ -14,7 +14,7 @@ import CompteUtilisateur = require("../Aggregate/CompteUtilisateur");
         this.eventRepository = new InMemoryEventRepository();
     }
 
-    public getAggregateByID(typeAggregate: Infrastructure.AggregateType, idAggregate: Immutables.Guid): Infrastructure.IAggregate {
+    public getAggregateById(typeAggregate: Infrastructure.AggregateType, idAggregate: Immutables.Guid): Infrastructure.IAggregate {
         var events = this.eventRepository.getEventsForAggregate(idAggregate);
         var aggregate = this.getAggregateCorrespondingToCommande(typeAggregate, idAggregate);
         events.forEach((event) => {
@@ -31,6 +31,7 @@ import CompteUtilisateur = require("../Aggregate/CompteUtilisateur");
             case Infrastructure.AggregateType.PropositionRepas:
                 return new PropositionRepas(idAggregate);
         };
+        throw new Error("AggregateRepository > getAggregateCorrespondingToCommande > Type non géré");
     }
 
      commitEvents(aggregate: Infrastructure.IAggregate): void {

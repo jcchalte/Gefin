@@ -130,6 +130,7 @@ var TestTasks;
     testsFileList.include("**/_*_test.js");
     testsFileList.exclude("node_modules");
     testsFileList.exclude("src/client");
+
     var mocha = require('jake-mocha');
 
     mocha.defineTask({

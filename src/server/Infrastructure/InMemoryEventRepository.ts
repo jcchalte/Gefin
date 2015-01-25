@@ -1,6 +1,6 @@
 ﻿import IEventDispatcher = require("./IEventDispatcher");
 import Infrastructure = require("./Infrastructure");
-import Immutables = require("../Shared/Immutables/Immutables");
+import Immutables = require("../Immutables/Immutables");
 import IEventRepository = require("./IEventRepository");
 export = InMemoryEventRepository
 class InMemoryEventRepository implements IEventRepository {

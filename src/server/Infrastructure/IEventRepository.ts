@@ -1,5 +1,5 @@
 ﻿import Infrastructure = require("./Infrastructure");
-import Immutables = require("../Shared/Immutables/Immutables");
+import Immutables = require("../Immutables/Immutables");
 
 export = IEventRepository;
 interface IEventRepository {

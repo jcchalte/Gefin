@@ -12,7 +12,7 @@ class CommandDispatcher {
         //      - Cette méthode regarde par rapport à ses projections si la commande est envisageable
         //      - En fonction de ses projections, elle rajoute des events dans la liste d'event à publier
         //3. On "Sauvegarde" les évènements à publier, c'est à dire qu'on va trigger tous les handlers et qu'on sauvegarde dans un repository   
-        var aggregate = IAggregateRepository.getInstance().getAggregateByID(commande.getAssociatedAggregateType(), commande.getAggregateId());
+        var aggregate = IAggregateRepository.getInstance().getAggregateById(commande.getAssociatedAggregateType(), commande.getAggregateId());
 
         aggregate.handleCommande(commande);
 

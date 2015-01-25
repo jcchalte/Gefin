@@ -1,4 +1,4 @@
-﻿import Immutables = require("../Shared/Immutables/Immutables");
+﻿import Immutables = require("../Immutables/Immutables");
 
 export enum AggregateType
 {
