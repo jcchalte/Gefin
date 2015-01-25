@@ -1,5 +1,5 @@
-﻿import IEvent = require("../Events/Base/IEvent");
-import Guid = require("../Shared/Immutables/Guid");
+﻿import Infrastructure = require("./Infrastructure");
+import Immutables = require("../Shared/Immutables/Immutables");
 import IEventRepository = require("./IEventRepository");
 export = InMemoryEventRepository
 class InMemoryEventRepository implements IEventRepository {
@@ -9,7 +9,7 @@ class InMemoryEventRepository implements IEventRepository {
         this.database = [];
     }
 
-    getEventsForAggregate(aggregateId: Guid): IEvent[] {
+    getEventsForAggregate(aggregateId: Immutables.Guid): Infrastructure.IEvent[] {
         return this.database.filter((item) => {
             return item.aggregateId.equals(aggregateId);
         }).map((item) => {
@@ -17,7 +17,7 @@ class InMemoryEventRepository implements IEventRepository {
         }).slice();
     }
 
-    commitEvents(events: IEvent[]): void {
+    commitEvents(events: Infrastructure.IEvent[]): void {
         events.forEach((event) => {
             this.database.push({
                 aggregateId: event.getAggregateId(),
@@ -28,6 +28,6 @@ class InMemoryEventRepository implements IEventRepository {
 }
 
 interface IEventLine {
-    aggregateId : Guid;
-    event: IEvent;
+    aggregateId: Immutables.Guid;
+    event: Infrastructure.IEvent;
 }

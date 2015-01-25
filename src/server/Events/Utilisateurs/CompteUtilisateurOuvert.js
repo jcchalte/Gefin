@@ -1,4 +1,7 @@
-﻿var CompteUtilisateurOuvert = (function () {
+﻿/// <reference path="../../../../Scripts/GlobalReferences.d.ts"/>
+var Infrastructure = require("../../Infrastructure/Infrastructure");
+
+var CompteUtilisateurOuvert = (function () {
     function CompteUtilisateurOuvert(idCompteUtilisateur, nomUtilisateur) {
         this.idCompteUtilisateur = idCompteUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
@@ -13,6 +16,10 @@
 
     CompteUtilisateurOuvert.prototype.getAggregateId = function () {
         return this.idCompteUtilisateur;
+    };
+
+    CompteUtilisateurOuvert.prototype.getEventName = function () {
+        return new Infrastructure.EventName("CompteUtilisateurOuvert");
     };
     return CompteUtilisateurOuvert;
 })();

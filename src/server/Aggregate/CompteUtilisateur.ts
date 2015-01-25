@@ -1,31 +1,29 @@
-﻿import AggregateBase = require("./AggregateBase");
+﻿import Infrastructure = require("../Infrastructure/Infrastructure");
 import CompteUtilisateurOuvert = require("../Events/Utilisateurs/CompteUtilisateurOuvert");
 import Login = require("../Shared/Immutables/Utilisateur/Login");
 import OuvrirCompteUtilisateur = require("../Commandes/Utilisateurs/OuvrirCompteUtilisateur");
-import Guid = require("../Shared/Immutables/Guid");
-import IEvent = require("../Events/Base/IEvent");
-import ICommande = require("../Commandes/Base/ICommande");
-import IAggregate = require("../Infrastructure/IAggregate");
+import Immutables = require("../Shared/Immutables/Immutables");
+
 export = CompteUtilisateur;
 
-class CompteUtilisateur extends AggregateBase implements IAggregate {
+class CompteUtilisateur extends Infrastructure.AggregateBase implements Infrastructure.IAggregate {
 
-    private aggregateId: Guid;
+    private aggregateId: Immutables.Guid;
     private login: Login;
 
-    constructor(aggregateId: Guid) {
+    constructor(aggregateId: Immutables.Guid) {
         super();
         this.aggregateId = aggregateId;
     }
 
-    handleCommande(commande: ICommande) {
+    handleCommande(commande: Infrastructure.ICommande) {
         if (commande instanceof <any>OuvrirCompteUtilisateur.constructor) {
             var commandeTypee = (<OuvrirCompteUtilisateur>commande);
             this.addEvent(new CompteUtilisateurOuvert(commandeTypee.getAggregateId(), commandeTypee.getNomUtilisateur()));
         }
     }
 
-    handleEvent(event: IEvent) {
+    handleEvent(event: Infrastructure.IEvent) {
         if (event instanceof <any>CompteUtilisateurOuvert.constructor) {
             var eventTypee = (<CompteUtilisateurOuvert>event);
             this.login = eventTypee.getNomUtilisateur();

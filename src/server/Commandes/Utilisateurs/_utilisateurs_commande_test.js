@@ -1,6 +1,6 @@
 ﻿/// <reference path="../../../../Scripts/GlobalReferences.d.ts"/>
 var Login = require("../../Shared/Immutables/Utilisateur/Login");
-var Guid = require("../../Shared/Immutables/Guid");
+var Immutables = require("../../Shared/Immutables/Immutables");
 var OuvrirCompteUtilisateur = require("./OuvrirCompteUtilisateur");
 var CompteUtilisateurOuvert = require("../../Events/Utilisateurs/CompteUtilisateurOuvert");
 var when = require("../../when");
@@ -14,7 +14,7 @@ describe("Commandes >", function () {
         });
 
         it("when l'utilisateur souhaite ouvrir un nouveau compte, then un nouveau compte est créé", function (done) {
-            var commandeUuid = new Guid();
+            var commandeUuid = new Immutables.Guid();
 
             var ouvrirCompteUtilisateur = new OuvrirCompteUtilisateur(commandeUuid, LOGIN_UTILISATEUR);
 

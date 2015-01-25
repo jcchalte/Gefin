@@ -1,20 +1,20 @@
 ﻿/// <reference path="../../../../Scripts/GlobalReferences.d.ts"/>
+import Infrastructure = require("../../Infrastructure/Infrastructure");
+
 import CompteUtilisateur = require("../../Aggregate/CompteUtilisateur");
-import IAggregate = require("../../Infrastructure/IAggregate");
-import ICommande = require("../Base/ICommande");
 
 import Login = require("../../Shared/Immutables/Utilisateur/Login");
-import Guid = require("../../Shared/Immutables/Guid");
+import Immutables = require("../../Shared/Immutables/Immutables");
 
 
 export = OuvrirCompteUtilisateur
-class OuvrirCompteUtilisateur implements ICommande{
+class OuvrirCompteUtilisateur implements Infrastructure.ICommande{
 
-    private idCompteUtilisateur: Guid;
+    private idCompteUtilisateur: Immutables.Guid;
 
     private nomUtilisateur: Login;
     
-    constructor(idCompteUtilisateur: Guid, nomUtilisateur: Login) {
+    constructor(idCompteUtilisateur: Immutables.Guid, nomUtilisateur: Login) {
         this.idCompteUtilisateur = idCompteUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
     }
@@ -31,7 +31,7 @@ class OuvrirCompteUtilisateur implements ICommande{
         return this.idCompteUtilisateur;
     }
 
-    getAssociatedAggregate(): IAggregate {
+    getAssociatedAggregate(): Infrastructure.IAggregate {
         return new CompteUtilisateur(this.getAggregateId());
     }
 }

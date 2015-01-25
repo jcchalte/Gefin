@@ -2,9 +2,9 @@
 import CompteUtilisateurOuvert = require("./Events/Utilisateurs/CompteUtilisateurOuvert");
 import CommandDispatcher = require("./Infrastructure/CommandDispatcher");
 
-import ICommande = require("./Commandes/Base/ICommande");
+import Infrastructure = require("./Infrastructure/Infrastructure");
 
-export function commande<TCommande>(commande: ICommande): IThenContext<ICommande> {
+export function commande<TCommande>(commande: Infrastructure.ICommande): IThenContext<Infrastructure.ICommande> {
     return new ThenContext(commande);
 }
 
@@ -13,9 +13,9 @@ export interface IThenContext<TCommande>{
 }
 
 export class ThenContext<TCommande> implements IThenContext<TCommande> {
-    private commande: ICommande;
+    private commande: Infrastructure.ICommande;
 
-    constructor(commande: ICommande) {
+    constructor(commande: Infrastructure.ICommande) {
         this.commande = commande;
     }
 

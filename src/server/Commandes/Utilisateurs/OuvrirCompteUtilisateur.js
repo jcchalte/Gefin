@@ -1,5 +1,4 @@
-﻿/// <reference path="../../../../Scripts/GlobalReferences.d.ts"/>
-var CompteUtilisateur = require("../../Aggregate/CompteUtilisateur");
+﻿var CompteUtilisateur = require("../../Aggregate/CompteUtilisateur");
 
 var OuvrirCompteUtilisateur = (function () {
     function OuvrirCompteUtilisateur(idCompteUtilisateur, nomUtilisateur) {

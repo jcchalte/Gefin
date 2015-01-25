@@ -1,9 +1,8 @@
 ﻿import InMemoryEventRepository = require("./InMemoryEventRepository");
 import CommandeUtilisateur = require("../Aggregate/CompteUtilisateur");
 import OuvrirCompteUtilisateur = require("../Commandes/Utilisateurs/OuvrirCompteUtilisateur");
-import IAggregate = require("./IAggregate");
+import Infrastructure = require("./Infrastructure");
 import IEventRepository = require("./IEventRepository");
-import ICommande = require("../Commandes/Base/ICommande");
 export = CommandDispatcher;
 
 class CommandDispatcher {
@@ -13,7 +12,8 @@ class CommandDispatcher {
         this.eventRepository = new InMemoryEventRepository();
     }
 
-    public dispatchCommand<TAggregate>(commande: ICommande): void {
+
+    public dispatchCommand<TAggregate>(commande: Infrastructure.ICommande): void {
         //1. Charger depuis un repository d'event ou créer l'aggrégat correspondant à la commande
         //2. Appeler la méthode "Handle" correspondant à la commande
         //      - Cette méthode regarde par rapport à ses projections si la commande est envisageable
@@ -32,7 +32,7 @@ class CommandDispatcher {
         this.eventRepository.commitEvents(aggregate.popEventsToCommit());
     }
 
-    private getAggregateCorrespondingToCommande(commande: ICommande): IAggregate {
+    private getAggregateCorrespondingToCommande(commande: Infrastructure.ICommande): Infrastructure.IAggregate {
         return commande.getAssociatedAggregate();
     }
 

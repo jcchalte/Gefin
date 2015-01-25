@@ -4,7 +4,7 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-var AggregateBase = require("./AggregateBase");
+var Infrastructure = require("../Infrastructure/Infrastructure");
 var CompteUtilisateurOuvert = require("../Events/Utilisateurs/CompteUtilisateurOuvert");
 
 var OuvrirCompteUtilisateur = require("../Commandes/Utilisateurs/OuvrirCompteUtilisateur");
@@ -30,5 +30,5 @@ var CompteUtilisateur = (function (_super) {
         }
     };
     return CompteUtilisateur;
-})(AggregateBase);
+})(Infrastructure.AggregateBase);
 module.exports = CompteUtilisateur;
