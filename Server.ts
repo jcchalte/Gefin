@@ -1,4 +1,4 @@
-﻿/// <reference path="Scripts/GlobalReferences.d.ts"/>
+﻿/// <reference path="./Scripts/GlobalReferences.d.ts"/>
 
 import server = require("./src/server/server");
 

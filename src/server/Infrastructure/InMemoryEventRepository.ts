@@ -1,4 +1,5 @@
-﻿import Infrastructure = require("./Infrastructure");
+﻿import IEventDispatcher = require("./IEventDispatcher");
+import Infrastructure = require("./Infrastructure");
 import Immutables = require("../Shared/Immutables/Immutables");
 import IEventRepository = require("./IEventRepository");
 export = InMemoryEventRepository
@@ -23,6 +24,10 @@ class InMemoryEventRepository implements IEventRepository {
                 aggregateId: event.getAggregateId(),
                 event: event
             });
+        });
+
+        events.forEach((event) => {
+            IEventDispatcher.GetInstance().dispatchEvent(event);
         });
     }
 }

@@ -1,5 +1,5 @@
-﻿var OuvrirCompteUtilisateur = require("./Commandes/Utilisateurs/OuvrirCompteUtilisateur");
-var CompteUtilisateurOuvert = require("./Events/Utilisateurs/CompteUtilisateurOuvert");
+﻿var IEventDispatcher = require("./Infrastructure/IEventDispatcher");
+
 var CommandDispatcher = require("./Infrastructure/CommandDispatcher");
 
 function commande(commande) {
@@ -13,18 +13,16 @@ var ThenContext = (function () {
     }
     ThenContext.prototype.thenExpect = function (expected) {
         var success = false;
-        var commandeDispatcher = new CommandDispatcher();
-
-        commandeDispatcher.dispatchCommand(this.commande);
-
-        if (this.commande instanceof OuvrirCompteUtilisateur) {
-            var commandeTypee = this.commande;
-            var eventGenere = new CompteUtilisateurOuvert(commandeTypee.getIdCompteUtilisateur(), commandeTypee.getNomUtilisateur());
-
-            if (eventGenere.equals(expected)) {
+        var onEventTriggered = function (event) {
+            IEventDispatcher.GetInstance().unregisterToEvent(expected.getEventName(), onEventTriggered);
+            if (event.equals(expected)) {
                 success = true;
             }
-        }
+        };
+        IEventDispatcher.GetInstance().registerToEvent(expected.getEventName(), onEventTriggered);
+
+        var commandeDispatcher = new CommandDispatcher();
+        commandeDispatcher.dispatchCommand(this.commande);
 
         if (!success)
             fail();

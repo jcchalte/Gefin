@@ -1,4 +1,6 @@
-﻿var InMemoryEventRepository = (function () {
+﻿var IEventDispatcher = require("./IEventDispatcher");
+
+var InMemoryEventRepository = (function () {
     function InMemoryEventRepository() {
         this.database = [];
     }
@@ -17,6 +19,10 @@
                 aggregateId: event.getAggregateId(),
                 event: event
             });
+        });
+
+        events.forEach(function (event) {
+            IEventDispatcher.GetInstance().dispatchEvent(event);
         });
     };
     return InMemoryEventRepository;
