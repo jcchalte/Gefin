@@ -1,24 +1,22 @@
-﻿var CompteUtilisateur = require("../../Aggregate/CompteUtilisateur");
+﻿/// <reference path="../../../../Scripts/GlobalReferences.d.ts"/>
+var Infrastructure = require("../../Infrastructure/Infrastructure");
 
+var CommandeType = Infrastructure.CommandeType;
 var OuvrirCompteUtilisateur = (function () {
     function OuvrirCompteUtilisateur(idCompteUtilisateur, nomUtilisateur) {
         this.idCompteUtilisateur = idCompteUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
     }
-    OuvrirCompteUtilisateur.prototype.getIdCompteUtilisateur = function () {
-        return this.idCompteUtilisateur;
-    };
-
-    OuvrirCompteUtilisateur.prototype.getNomUtilisateur = function () {
-        return this.nomUtilisateur;
-    };
-
     OuvrirCompteUtilisateur.prototype.getAggregateId = function () {
         return this.idCompteUtilisateur;
     };
 
-    OuvrirCompteUtilisateur.prototype.getAssociatedAggregate = function () {
-        return new CompteUtilisateur(this.getAggregateId());
+    OuvrirCompteUtilisateur.prototype.getAssociatedAggregateType = function () {
+        return 0 /* CompteUtilisateur */;
+    };
+
+    OuvrirCompteUtilisateur.prototype.getCommandType = function () {
+        return 0 /* OuvrirCompteUtilisateur */;
     };
     return OuvrirCompteUtilisateur;
 })();

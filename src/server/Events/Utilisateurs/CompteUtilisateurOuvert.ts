@@ -5,23 +5,20 @@ import Immutables = require("../../Shared/Immutables/Immutables");
 
 export = CompteUtilisateurOuvert
 class CompteUtilisateurOuvert implements Infrastructure.IEvent {
-    private idCompteUtilisateur: Immutables.Guid;
-    private nomUtilisateur: Login;
+    public idCompteUtilisateur: Immutables.Guid;
+    public nomUtilisateur: Login;
 
     constructor(idCompteUtilisateur: Immutables.Guid, nomUtilisateur: Login) {
         this.idCompteUtilisateur = idCompteUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
     }
 
-    public getNomUtilisateur() {
-        return this.getNomUtilisateur();
-    }
-
-    equals(left: Infrastructure.IEvent): boolean {
-        return true;
+    equals(left: CompteUtilisateurOuvert): boolean {
+        return this.idCompteUtilisateur.equals(left.idCompteUtilisateur)
+            && this.nomUtilisateur.equals(left.nomUtilisateur);
     }
 
     getAggregateId(): Immutables.Guid { return this.idCompteUtilisateur; }
 
-    getEventName(): Infrastructure.EventName { return new Infrastructure.EventName("CompteUtilisateurOuvert"); }
+    getEventType(): Infrastructure.EventType { return Infrastructure.EventType.CompteUtilisateurOuvert; }
 }

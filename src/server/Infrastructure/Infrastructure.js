@@ -1,31 +1,21 @@
-﻿var EventName = (function () {
-    function EventName(value) {
-        this.innerValue = value;
-    }
-    EventName.prototype.value = function () {
-        return this.innerValue;
-    };
+﻿(function (AggregateType) {
+    AggregateType[AggregateType["CompteUtilisateur"] = 0] = "CompteUtilisateur";
+    AggregateType[AggregateType["PropositionRepas"] = 1] = "PropositionRepas";
+})(exports.AggregateType || (exports.AggregateType = {}));
+var AggregateType = exports.AggregateType;
 
-    EventName.prototype.equals = function (left) {
-        return this.value() === left.value();
-    };
-    return EventName;
-})();
-exports.EventName = EventName;
+(function (CommandeType) {
+    CommandeType[CommandeType["OuvrirCompteUtilisateur"] = 0] = "OuvrirCompteUtilisateur";
+    CommandeType[CommandeType["DebuterPropositionRepas"] = 1] = "DebuterPropositionRepas";
+    CommandeType[CommandeType["RenseignerInformationSecondairesPropositionRepas"] = 2] = "RenseignerInformationSecondairesPropositionRepas";
+    CommandeType[CommandeType["PublierPropositionRepas"] = 3] = "PublierPropositionRepas";
+})(exports.CommandeType || (exports.CommandeType = {}));
+var CommandeType = exports.CommandeType;
 
-var AggregateBase = (function () {
-    function AggregateBase() {
-        this.eventsToCommit = [];
-    }
-    AggregateBase.prototype.addEvent = function (event) {
-        this.eventsToCommit.push(event);
-    };
-
-    AggregateBase.prototype.popEventsToCommit = function () {
-        var resultat = this.eventsToCommit.slice();
-        this.eventsToCommit = [];
-        return resultat;
-    };
-    return AggregateBase;
-})();
-exports.AggregateBase = AggregateBase;
+(function (EventType) {
+    EventType[EventType["CompteUtilisateurOuvert"] = 0] = "CompteUtilisateurOuvert";
+    EventType[EventType["PropositionRepasDebutee"] = 1] = "PropositionRepasDebutee";
+    EventType[EventType["InformationsSecondairesPropositionRepasRenseignees"] = 2] = "InformationsSecondairesPropositionRepasRenseignees";
+    EventType[EventType["PropositionRepasPubliee"] = 3] = "PropositionRepasPubliee";
+})(exports.EventType || (exports.EventType = {}));
+var EventType = exports.EventType;

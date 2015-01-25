@@ -1,9 +1,8 @@
-﻿var InMemoryEventRepository = require("./InMemoryEventRepository");
+﻿var IAggregateRepository = require("./IAggregateRepository");
 
 
 var CommandDispatcher = (function () {
     function CommandDispatcher() {
-        this.eventRepository = new InMemoryEventRepository();
     }
     CommandDispatcher.prototype.dispatchCommand = function (commande) {
         //1. Charger depuis un repository d'event ou créer l'aggrégat correspondant à la commande
@@ -11,20 +10,11 @@ var CommandDispatcher = (function () {
         //      - Cette méthode regarde par rapport à ses projections si la commande est envisageable
         //      - En fonction de ses projections, elle rajoute des events dans la liste d'event à publier
         //3. On "Sauvegarde" les évènements à publier, c'est à dire qu'on va trigger tous les handlers et qu'on sauvegarde dans un repository
-        var aggregateId = commande.getAggregateId();
-        var events = this.eventRepository.getEventsForAggregate(aggregateId);
-        var aggregate = this.getAggregateCorrespondingToCommande(commande);
-        events.forEach(function (event) {
-            aggregate.handleEvent(event);
-        });
+        var aggregate = IAggregateRepository.getInstance().getAggregateByID(commande.getAssociatedAggregateType(), commande.getAggregateId());
 
         aggregate.handleCommande(commande);
 
-        this.eventRepository.commitEvents(aggregate.popEventsToCommit());
-    };
-
-    CommandDispatcher.prototype.getAggregateCorrespondingToCommande = function (commande) {
-        return commande.getAssociatedAggregate();
+        IAggregateRepository.getInstance().commitEvents(aggregate);
     };
     return CommandDispatcher;
 })();

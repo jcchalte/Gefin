@@ -1,0 +1,78 @@
+﻿/// <reference path="../../../../Scripts/GlobalReferences.d.ts"/>
+import SagaBase = require("../../Sagas/SagaBase");
+import PropositionRepasPubliee = require("../../Events/PropositionRepas/PropositionRepasPubliee");
+import InformationsSecondairesPropositionRepasRenseignees = require("../../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
+import RenseignerInformationSecondairesPropositionRepas = require("./RenseignerInformationSecondairesPropositionRepas");
+import Infrastructure = require("../../Infrastructure/Infrastructure");
+import CommandDispatcher = require("../../Infrastructure/CommandDispatcher");
+
+import PropositionRepasDebutee = require("../../Events/PropositionRepas/PropositionRepasDebutee");
+import DebuterPropositionRepas = require("./DebuterPropositionRepas");
+import Libelle = require("../../Shared/Immutables/PropositioRepas/Libelle");
+import Immutables = require("../../Shared/Immutables/Immutables");
+import when = require("../../when");
+
+describe("Commandes >", () => {
+    describe("Proposition repas >", () => {
+
+
+        before((done) => {
+
+            SagaBase.initSagas();
+
+            done();
+        });
+
+        it("given un utilisateur existant when un utilisateur débute une proposition de repas, then une proposition de repas est débutée", (done) => {
+            var utilisateurUuid = new Immutables.Guid();
+
+            var propositionRepasUuid = new Immutables.Guid();
+            var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
+
+            when.commande(debuterPropositionRepas).thenExpect(new PropositionRepasDebutee(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'), false, ''));
+
+            done();
+        });
+
+
+
+        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then les informations secondaires de la proposition sont renseignés", (done) => {
+            var utilisateurUuid = new Immutables.Guid();
+            var propositionRepasUuid = new Immutables.Guid();
+            var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
+            Helpers.executerCommande(debuterPropositionRepas);
+
+            var renseignerInformationSecondairesPropositionRepas = new RenseignerInformationSecondairesPropositionRepas(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true);
+
+            when.commande(renseignerInformationSecondairesPropositionRepas).thenExpect(new InformationsSecondairesPropositionRepasRenseignees(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true));
+            done();
+        });
+
+
+        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then la proposition de repas est publiée", (done) => {
+            var utilisateurUuid = new Immutables.Guid();
+            var propositionRepasUuid = new Immutables.Guid();
+            var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
+            Helpers.executerCommande(debuterPropositionRepas);
+
+            var renseignerInformationSecondairesPropositionRepas = new RenseignerInformationSecondairesPropositionRepas(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true);
+
+            when.commande(renseignerInformationSecondairesPropositionRepas).thenExpect(new PropositionRepasPubliee(propositionRepasUuid, new Libelle('Pizzicato'), new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90),true, false, ''));
+            done();
+        });
+
+        after((done) => {
+            done();
+        });
+    });
+});
+
+module Helpers {
+    export function executerCommande(commande: Infrastructure.ICommande) {
+        var commandeDispatcher = new CommandDispatcher();
+        commandeDispatcher.dispatchCommand(commande);
+    }
+    export function debuterPropositionRepasPubliqueSansInvitation(commandeUuid: Immutables.Guid, utilisateurUuid, libelle: Libelle) {
+        return new DebuterPropositionRepas(commandeUuid, utilisateurUuid, libelle, false, "");
+    }
+}

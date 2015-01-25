@@ -22,7 +22,7 @@ var InMemoryEventRepository = (function () {
         });
 
         events.forEach(function (event) {
-            IEventDispatcher.GetInstance().dispatchEvent(event);
+            IEventDispatcher.getInstance().dispatchEvent(event);
         });
     };
     return InMemoryEventRepository;

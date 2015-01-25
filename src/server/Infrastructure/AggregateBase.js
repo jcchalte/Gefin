@@ -1,17 +1,4 @@
-﻿var EventName = (function () {
-    function EventName(value) {
-        this.innerValue = value;
-    }
-    EventName.prototype.value = function () {
-        return this.innerValue;
-    };
-
-    EventName.prototype.equals = function (left) {
-        return this.value() === left.value();
-    };
-    return EventName;
-})();
-exports.EventName = EventName;
+﻿var CommandDispatcher = require("./CommandDispatcher");
 
 var AggregateBase = (function () {
     function AggregateBase() {
@@ -26,6 +13,11 @@ var AggregateBase = (function () {
         this.eventsToCommit = [];
         return resultat;
     };
+
+    AggregateBase.prototype.addCommande = function (commande) {
+        var dispatcher = new CommandDispatcher();
+        dispatcher.dispatchCommand(commande);
+    };
     return AggregateBase;
 })();
-exports.AggregateBase = AggregateBase;
+module.exports = AggregateBase;

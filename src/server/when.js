@@ -1,5 +1,4 @@
 ﻿var IEventDispatcher = require("./Infrastructure/IEventDispatcher");
-
 var CommandDispatcher = require("./Infrastructure/CommandDispatcher");
 
 function commande(commande) {
@@ -14,12 +13,13 @@ var ThenContext = (function () {
     ThenContext.prototype.thenExpect = function (expected) {
         var success = false;
         var onEventTriggered = function (event) {
-            IEventDispatcher.GetInstance().unregisterToEvent(expected.getEventName(), onEventTriggered);
+            IEventDispatcher.getInstance().unregisterToEvent(expected.getEventType(), onEventTriggered);
+
             if (event.equals(expected)) {
                 success = true;
             }
         };
-        IEventDispatcher.GetInstance().registerToEvent(expected.getEventName(), onEventTriggered);
+        IEventDispatcher.getInstance().registerToEvent(expected.getEventType(), onEventTriggered);
 
         var commandeDispatcher = new CommandDispatcher();
         commandeDispatcher.dispatchCommand(this.commande);

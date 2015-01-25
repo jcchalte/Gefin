@@ -50,3 +50,27 @@ var Description = (function () {
     };
     return Description;
 })();
+exports.Description = Description;
+
+var Heure = (function () {
+    function Heure(heure, minutes) {
+        this.heure = heure;
+        this.minutes = minutes;
+    }
+    Heure.prototype.equals = function (left) {
+        return this.heure === left.heure && this.minutes === left.minutes;
+    };
+    return Heure;
+})();
+exports.Heure = Heure;
+
+var Euros = (function () {
+    function Euros(montant) {
+        this.montant = montant;
+    }
+    Euros.prototype.equals = function (left) {
+        return this.montant === left.montant;
+    };
+    return Euros;
+})();
+exports.Euros = Euros;

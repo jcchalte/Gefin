@@ -27,7 +27,8 @@ class InMemoryEventRepository implements IEventRepository {
         });
 
         events.forEach((event) => {
-            IEventDispatcher.GetInstance().dispatchEvent(event);
+
+            IEventDispatcher.getInstance().dispatchEvent(event);
         });
     }
 }

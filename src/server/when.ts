@@ -1,6 +1,4 @@
 ﻿import IEventDispatcher = require("./Infrastructure/IEventDispatcher");
-import OuvrirCompteUtilisateur = require("./Commandes/Utilisateurs/OuvrirCompteUtilisateur");
-import CompteUtilisateurOuvert = require("./Events/Utilisateurs/CompteUtilisateurOuvert");
 import CommandDispatcher = require("./Infrastructure/CommandDispatcher");
 
 import Infrastructure = require("./Infrastructure/Infrastructure");
@@ -23,13 +21,14 @@ export class ThenContext<TCommande> implements IThenContext<TCommande> {
     public thenExpect(expected: Infrastructure.IEvent) {
 
         var success = false;
-        var onEventTriggered = (event: CompteUtilisateurOuvert) => {
-            IEventDispatcher.GetInstance().unregisterToEvent(expected.getEventName(), onEventTriggered);
+        var onEventTriggered = (event: Infrastructure.IEvent) => {
+            IEventDispatcher.getInstance().unregisterToEvent(expected.getEventType(), onEventTriggered);
+
             if (event.equals(expected)) {
                 success = true;
             }
         }
-        IEventDispatcher.GetInstance().registerToEvent(expected.getEventName(), onEventTriggered);
+        IEventDispatcher.getInstance().registerToEvent(expected.getEventType(), onEventTriggered);
 
         var commandeDispatcher = new CommandDispatcher();
         commandeDispatcher.dispatchCommand(this.commande);

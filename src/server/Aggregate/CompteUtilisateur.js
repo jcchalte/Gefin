@@ -4,10 +4,9 @@
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+var AggregateBase = require("../Infrastructure/AggregateBase");
 var Infrastructure = require("../Infrastructure/Infrastructure");
 var CompteUtilisateurOuvert = require("../Events/Utilisateurs/CompteUtilisateurOuvert");
-
-var OuvrirCompteUtilisateur = require("../Commandes/Utilisateurs/OuvrirCompteUtilisateur");
 
 
 var CompteUtilisateur = (function (_super) {
@@ -17,18 +16,28 @@ var CompteUtilisateur = (function (_super) {
         this.aggregateId = aggregateId;
     }
     CompteUtilisateur.prototype.handleCommande = function (commande) {
-        if (commande instanceof OuvrirCompteUtilisateur.constructor) {
-            var commandeTypee = commande;
-            this.addEvent(new CompteUtilisateurOuvert(commandeTypee.getAggregateId(), commandeTypee.getNomUtilisateur()));
+        switch (commande.getCommandType()) {
+            case 0 /* OuvrirCompteUtilisateur */:
+                this.handleCommandeOuvrirCompteUtilisateur(commande);
+                break;
         }
     };
 
+    CompteUtilisateur.prototype.handleCommandeOuvrirCompteUtilisateur = function (commande) {
+        this.addEvent(new CompteUtilisateurOuvert(commande.getAggregateId(), commande.nomUtilisateur));
+    };
+
     CompteUtilisateur.prototype.handleEvent = function (event) {
-        if (event instanceof CompteUtilisateurOuvert.constructor) {
-            var eventTypee = event;
-            this.login = eventTypee.getNomUtilisateur();
+        switch (event.getEventType()) {
+            case 0 /* CompteUtilisateurOuvert */:
+                this.handleEventCompteUtilisateurOuvert(event);
+                break;
         }
     };
+
+    CompteUtilisateur.prototype.handleEventCompteUtilisateurOuvert = function (event) {
+        this.login = event.nomUtilisateur;
+    };
     return CompteUtilisateur;
-})(Infrastructure.AggregateBase);
+})(AggregateBase);
 module.exports = CompteUtilisateur;

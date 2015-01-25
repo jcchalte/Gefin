@@ -13,7 +13,7 @@ describe("Commandes >", function () {
             done();
         });
 
-        it("when l'utilisateur souhaite ouvrir un nouveau compte, then un nouveau compte est créé", function (done) {
+        it("when un administrateur souhaite ouvrir un nouveau compte, then un nouveau compte est créé", function (done) {
             var commandeUuid = new Immutables.Guid();
 
             var ouvrirCompteUtilisateur = new OuvrirCompteUtilisateur(commandeUuid, LOGIN_UTILISATEUR);

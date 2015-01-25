@@ -17,14 +17,14 @@ describe("Smoke testing >", () => {
 
 
         it('Can get homepage', (done) => {
-            httpTextGet("http://localhost:8082/", (response, content) => {
+            httpTextGet("http://localhost:8082/", (response) => {
                 response.statusCode.should.equal(200, "La code de retour du smoke test n'est pas 200");
                 done();
             });
         });
 
         it('Can get 404', (done) => {
-            httpTextGet("http://localhost:8082/autrePageQuiNexistePas", (response, content) => {
+            httpTextGet("http://localhost:8082/autrePageQuiNexistePas", (response) => {
                 response.statusCode.should.equal(404, "La code de retour du smoke test n'est pas 404");
                 done();
             });
@@ -54,7 +54,7 @@ function runServer(command: string, done: () => void): child_process.ChildProces
     childProcess.stderr.on("data", (chunk) => {
         console.log("stderr : " + chunk);
     });
-    childProcess.on("exit", (code, signal) => {
+    childProcess.on("exit", () => {
     });
 
     return childProcess;

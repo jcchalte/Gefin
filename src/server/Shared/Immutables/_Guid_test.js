@@ -18,7 +18,7 @@ describe("Guid >", function () {
 
     it("two subsequent Guid calls should not share the same inner value", function () {
         var guid = new Immutables.Guid(), guid2 = new Immutables.Guid();
-        assert.ok(guid.innerValue() != guid2.innerValue());
+        assert.ok(guid.innerValue() !== guid2.innerValue());
     });
 
     it("Guid can be constructed from a valid value", function () {
@@ -27,6 +27,7 @@ describe("Guid >", function () {
     });
 
     it("Guid cannot be constructed from an invalid value", function () {
+        // ReSharper disable once WrongExpressionStatement
         assert.throws(function () {
             new Immutables.Guid("invalid value");
         });

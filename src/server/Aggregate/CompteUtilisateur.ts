@@ -1,4 +1,5 @@
-﻿import Infrastructure = require("../Infrastructure/Infrastructure");
+﻿import AggregateBase = require("../Infrastructure/AggregateBase");
+import Infrastructure = require("../Infrastructure/Infrastructure");
 import CompteUtilisateurOuvert = require("../Events/Utilisateurs/CompteUtilisateurOuvert");
 import Login = require("../Shared/Immutables/Utilisateur/Login");
 import OuvrirCompteUtilisateur = require("../Commandes/Utilisateurs/OuvrirCompteUtilisateur");
@@ -6,7 +7,7 @@ import Immutables = require("../Shared/Immutables/Immutables");
 
 export = CompteUtilisateur;
 
-class CompteUtilisateur extends Infrastructure.AggregateBase implements Infrastructure.IAggregate {
+class CompteUtilisateur extends AggregateBase implements Infrastructure.IAggregate {
 
     private aggregateId: Immutables.Guid;
     private login: Login;
@@ -17,16 +18,26 @@ class CompteUtilisateur extends Infrastructure.AggregateBase implements Infrastr
     }
 
     handleCommande(commande: Infrastructure.ICommande) {
-        if (commande instanceof <any>OuvrirCompteUtilisateur.constructor) {
-            var commandeTypee = (<OuvrirCompteUtilisateur>commande);
-            this.addEvent(new CompteUtilisateurOuvert(commandeTypee.getAggregateId(), commandeTypee.getNomUtilisateur()));
+        switch (commande.getCommandType()) {
+            case Infrastructure.CommandeType.OuvrirCompteUtilisateur:
+                this.handleCommandeOuvrirCompteUtilisateur(<OuvrirCompteUtilisateur>commande);
+                break;
         }
     }
 
+    private handleCommandeOuvrirCompteUtilisateur(commande: OuvrirCompteUtilisateur) {
+        this.addEvent(new CompteUtilisateurOuvert(commande.getAggregateId(), commande.nomUtilisateur));
+    }
+
     handleEvent(event: Infrastructure.IEvent) {
-        if (event instanceof <any>CompteUtilisateurOuvert.constructor) {
-            var eventTypee = (<CompteUtilisateurOuvert>event);
-            this.login = eventTypee.getNomUtilisateur();
+        switch (event.getEventType()) {
+            case Infrastructure.EventType.CompteUtilisateurOuvert:
+                this.handleEventCompteUtilisateurOuvert(<CompteUtilisateurOuvert>event);
+                break;
         }
+    }
+
+    private handleEventCompteUtilisateurOuvert(event: CompteUtilisateurOuvert) {
+        this.login = event.nomUtilisateur;
     }
 }

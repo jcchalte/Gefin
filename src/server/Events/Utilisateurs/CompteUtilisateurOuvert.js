@@ -6,20 +6,16 @@ var CompteUtilisateurOuvert = (function () {
         this.idCompteUtilisateur = idCompteUtilisateur;
         this.nomUtilisateur = nomUtilisateur;
     }
-    CompteUtilisateurOuvert.prototype.getNomUtilisateur = function () {
-        return this.getNomUtilisateur();
-    };
-
     CompteUtilisateurOuvert.prototype.equals = function (left) {
-        return true;
+        return this.idCompteUtilisateur.equals(left.idCompteUtilisateur) && this.nomUtilisateur.equals(left.nomUtilisateur);
     };
 
     CompteUtilisateurOuvert.prototype.getAggregateId = function () {
         return this.idCompteUtilisateur;
     };
 
-    CompteUtilisateurOuvert.prototype.getEventName = function () {
-        return new Infrastructure.EventName("CompteUtilisateurOuvert");
+    CompteUtilisateurOuvert.prototype.getEventType = function () {
+        return 0 /* CompteUtilisateurOuvert */;
     };
     return CompteUtilisateurOuvert;
 })();

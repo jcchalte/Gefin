@@ -1,13 +1,14 @@
 ﻿var EventDispatcher = require("./EventDispatcher");
 
 
+// ReSharper disable once InconsistentNaming
 var IEventDispatcher;
 (function (IEventDispatcher) {
     var instance = new EventDispatcher();
 
-    function GetInstance() {
+    function getInstance() {
         return instance;
     }
-    IEventDispatcher.GetInstance = GetInstance;
+    IEventDispatcher.getInstance = getInstance;
 })(IEventDispatcher || (IEventDispatcher = {}));
 module.exports = IEventDispatcher;
