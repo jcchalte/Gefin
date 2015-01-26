@@ -2907,7 +2907,6 @@
     <Content Include="jake.bat" />
     <Content Include="package.json" />
     <Content Include="packages.config" />
-    <Content Include="README" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Jakefile.ts" />
@@ -2932,7 +2931,7 @@
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\DebuterPropositionRepas.ts" />
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\PublierPropositionRepas.ts" />
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\RenseignerInformationSecondairesPropositionRepas.ts" />
-    <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\_PropositionRepas_commande_test.ts" />
+    <TypeScriptCompile Include="src\server\Repas\_PropositionRepas_commande_test.ts" />
     <TypeScriptCompile Include="src\server\Repas\Events\PropositionRepas\InformationsSecondairesPropositionRepasRenseignees.ts" />
     <TypeScriptCompile Include="src\server\Repas\Events\PropositionRepas\PropositionRepasDebutee.ts" />
     <TypeScriptCompile Include="src\server\Repas\Events\PropositionRepas\PropositionRepasPubliee.ts" />
@@ -2940,7 +2939,7 @@
     <TypeScriptCompile Include="src\server\Repas\Sagas\PublicationPropositionRepasSaga.ts" />
     <TypeScriptCompile Include="src\server\Administration\Aggregate\CompteUtilisateur.ts" />
     <TypeScriptCompile Include="src\server\Administration\Commandes\Utilisateurs\OuvrirCompteUtilisateur.ts" />
-    <TypeScriptCompile Include="src\server\Administration\Commandes\Utilisateurs\_utilisateurs_commande_test.ts" />
+    <TypeScriptCompile Include="src\server\Administration\_utilisateurs_commande_test.ts" />
     <TypeScriptCompile Include="src\server\Administration\Events\Utilisateurs\CompteUtilisateurOuvert.ts" />
     <TypeScriptCompile Include="src\server\Infrastructure\__Implementations\EventDispatcher.ts" />
     <TypeScriptCompile Include="src\server\Infrastructure\Infrastructure.ts" />
@@ -4390,6 +4389,9 @@
   <ItemGroup>
     <Content Include=".deployment" />
     <Content Include="deploy.cmd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="README.md" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>

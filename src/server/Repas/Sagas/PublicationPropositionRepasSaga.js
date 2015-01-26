@@ -1,5 +1,4 @@
 ﻿var InformationsSecondairesPropositionRepasRenseignees = require("../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
-
 var PublierPropositionRepas = require("../Commandes/PropositionRepas/PublierPropositionRepas");
 var Infrastructure = require("../../Infrastructure/Infrastructure");
 

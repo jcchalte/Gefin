@@ -1,25 +1,22 @@
-﻿import EventDispatcher = require("../../../Infrastructure/__Implementations/EventDispatcher");
-import InMemoryEventRepository = require("../../../Infrastructure/__Implementations/InMemoryEventRepository");
-import CommandDispatcher = require("../../../Infrastructure/__Implementations/CommandDispatcher");
+﻿var EventDispatcher = require("../Infrastructure/__Implementations/EventDispatcher");
+var InMemoryEventRepository = require("../Infrastructure/__Implementations/InMemoryEventRepository");
+var CommandDispatcher = require("../Infrastructure/__Implementations/CommandDispatcher");
 
-import PropositionRepasPubliee = require("../../Events/PropositionRepas/PropositionRepasPubliee");
-import InformationsSecondairesPropositionRepasRenseignees = require("../../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
-import RenseignerInformationSecondairesPropositionRepas = require("./RenseignerInformationSecondairesPropositionRepas");
-import Infrastructure = require("../../../Infrastructure/Infrastructure");
+var PropositionRepasPubliee = require("./Events/PropositionRepas/PropositionRepasPubliee");
+var InformationsSecondairesPropositionRepasRenseignees = require("./Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
+var RenseignerInformationSecondairesPropositionRepas = require("./Commandes/PropositionRepas/RenseignerInformationSecondairesPropositionRepas");
+var Infrastructure = require("../Infrastructure/Infrastructure");
 
+var PropositionRepasDebutee = require("./Events/PropositionRepas/PropositionRepasDebutee");
+var DebuterPropositionRepas = require("./Commandes/PropositionRepas/DebuterPropositionRepas");
+var Libelle = require("./Immutables/PropositioRepas/Libelle");
+var Immutables = require("../Immutables/Immutables");
+var when = require("../when");
+var RepasSagaRegistration = require("./Sagas/RepasSagaRegistration");
 
-import PropositionRepasDebutee = require("../../Events/PropositionRepas/PropositionRepasDebutee");
-import DebuterPropositionRepas = require("./DebuterPropositionRepas");
-import Libelle = require("../../Immutables/PropositioRepas/Libelle");
-import Immutables = require("../../../Immutables/Immutables");
-import when = require("../../../when");
-import RepasSagaRegistration = require("../../Sagas/RepasSagaRegistration");
-
-describe("Commandes >", () => {
-    describe("Proposition repas >", () => {
-
-
-        before((done) => {
+describe("Commandes >", function () {
+    describe("Proposition repas >", function () {
+        before(function (done) {
             Infrastructure.ServiceInjection.injectServices(new EventDispatcher(), new InMemoryEventRepository(), new CommandDispatcher());
 
             RepasSagaRegistration.registerSagas();
@@ -27,7 +24,7 @@ describe("Commandes >", () => {
             done();
         });
 
-        it("given un utilisateur existant when un utilisateur débute une proposition de repas, then une proposition de repas est débutée", (done) => {
+        it("given un utilisateur existant when un utilisateur débute une proposition de repas, then une proposition de repas est débutée", function (done) {
             var utilisateurUuid = new Immutables.Guid();
 
             var propositionRepasUuid = new Immutables.Guid();
@@ -38,9 +35,7 @@ describe("Commandes >", () => {
             done();
         });
 
-
-
-        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then les informations secondaires de la proposition sont renseignés", (done) => {
+        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then les informations secondaires de la proposition sont renseignés", function (done) {
             var utilisateurUuid = new Immutables.Guid();
             var propositionRepasUuid = new Immutables.Guid();
             var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
@@ -52,8 +47,7 @@ describe("Commandes >", () => {
             done();
         });
 
-
-        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then la proposition de repas est publiée", (done) => {
+        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then la proposition de repas est publiée", function (done) {
             var utilisateurUuid = new Immutables.Guid();
             var propositionRepasUuid = new Immutables.Guid();
             var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
@@ -65,18 +59,21 @@ describe("Commandes >", () => {
             done();
         });
 
-        after((done) => {
+        after(function (done) {
             done();
         });
     });
 });
 
-module Helpers {
-    export function executerCommande(commande: Infrastructure.ICommande) {
+var Helpers;
+(function (Helpers) {
+    function executerCommande(commande) {
         var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
         commandeDispatcher.dispatchCommand(commande);
     }
-    export function debuterPropositionRepasPubliqueSansInvitation(commandeUuid: Immutables.Guid, utilisateurUuid, libelle: Libelle) {
+    Helpers.executerCommande = executerCommande;
+    function debuterPropositionRepasPubliqueSansInvitation(commandeUuid, utilisateurUuid, libelle) {
         return new DebuterPropositionRepas(commandeUuid, utilisateurUuid, libelle, false, "");
     }
-}
+    Helpers.debuterPropositionRepasPubliqueSansInvitation = debuterPropositionRepasPubliqueSansInvitation;
+})(Helpers || (Helpers = {}));

@@ -1,15 +1,14 @@
-﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
-import EventDispatcher = require("../../../Infrastructure/__Implementations/EventDispatcher");
-import InMemoryEventRepository = require("../../../Infrastructure/__Implementations/InMemoryEventRepository");
-import CommandDispatcher = require("../../../Infrastructure/__Implementations/CommandDispatcher");
+﻿import EventDispatcher = require("../Infrastructure/__Implementations/EventDispatcher");
+import InMemoryEventRepository = require("../Infrastructure/__Implementations/InMemoryEventRepository");
+import CommandDispatcher = require("./../Infrastructure/__Implementations/CommandDispatcher");
 
-import Infrastructure = require("../../../Infrastructure/Infrastructure");
+import Infrastructure = require("./../Infrastructure/Infrastructure");
 
-import Login = require("../../Immutables/Utilisateur/Login");
-import Immutables = require("../../../Immutables/Immutables");
-import OuvrirCompteUtilisateur = require("./OuvrirCompteUtilisateur");
-import CompteUtilisateurOuvert = require("../../Events/Utilisateurs/CompteUtilisateurOuvert");
-import when = require("../../../when");
+import Login = require("./Immutables/Utilisateur/Login");
+import Immutables = require("./../Immutables/Immutables");
+import OuvrirCompteUtilisateur = require("./Commandes/Utilisateurs/OuvrirCompteUtilisateur");
+import CompteUtilisateurOuvert = require("./Events/Utilisateurs/CompteUtilisateurOuvert");
+import when = require("../when");
 
 describe("Commandes >", () => {
     describe("Utilisateurs >", () => {
