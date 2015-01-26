@@ -20,5 +20,5 @@ class CompteUtilisateurOuvert implements Infrastructure.IEvent {
 
     getAggregateId(): Immutables.Guid { return this.idCompteUtilisateur; }
 
-    getEventType(): Infrastructure.EventType { return Infrastructure.EventType.CompteUtilisateurOuvert; }
+    //getEventType(): Infrastructure.Referentiel.EventType { return Infrastructure.Referentiel.EventType.CompteUtilisateurOuvert; }
 }

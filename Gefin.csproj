@@ -2927,6 +2927,7 @@
     <TypeScriptCompile Include="src\server\Administration\Immutables\Utilisateur\Login.ts" />
     <TypeScriptCompile Include="src\server\Immutables\Immutables.ts" />
     <TypeScriptCompile Include="src\server\Immutables\_Guid_test.ts" />
+    <TypeScriptCompile Include="src\server\Infrastructure\__Implementations\CommandDispatcher.ts" />
     <TypeScriptCompile Include="src\server\Repas\Aggregate\PropositionRepas.ts" />
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\DebuterPropositionRepas.ts" />
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\PublierPropositionRepas.ts" />
@@ -2941,15 +2942,9 @@
     <TypeScriptCompile Include="src\server\Administration\Commandes\Utilisateurs\OuvrirCompteUtilisateur.ts" />
     <TypeScriptCompile Include="src\server\Administration\Commandes\Utilisateurs\_utilisateurs_commande_test.ts" />
     <TypeScriptCompile Include="src\server\Administration\Events\Utilisateurs\CompteUtilisateurOuvert.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\AggregateBase.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\AggregateRepository.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\CommandDispatcher.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\EventDispatcher.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\IAggregateRepository.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\IEventDispatcher.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\IEventRepository.ts" />
+    <TypeScriptCompile Include="src\server\Infrastructure\__Implementations\EventDispatcher.ts" />
     <TypeScriptCompile Include="src\server\Infrastructure\Infrastructure.ts" />
-    <TypeScriptCompile Include="src\server\Infrastructure\InMemoryEventRepository.ts" />
+    <TypeScriptCompile Include="src\server\Infrastructure\__Implementations\InMemoryEventRepository.ts" />
     <TypeScriptCompile Include="src\server\Repas\Sagas\RepasSagaRegistration.ts" />
     <TypeScriptCompile Include="src\server\server.ts" />
     <TypeScriptCompile Include="src\server\when.ts" />

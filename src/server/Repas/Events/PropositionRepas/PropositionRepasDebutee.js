@@ -1,6 +1,4 @@
-﻿var Infrastructure = require("../../../Infrastructure/Infrastructure");
-
-var PropositionRepasDebutee = (function () {
+﻿var PropositionRepasDebutee = (function () {
     function PropositionRepasDebutee(idPropositionRepas, idUtilisateur, libelle, isPrive, invitations) {
         this.idPropositionRepas = idPropositionRepas;
         this.idUtilisateur = idUtilisateur;
@@ -14,10 +12,6 @@ var PropositionRepasDebutee = (function () {
 
     PropositionRepasDebutee.prototype.getAggregateId = function () {
         return this.idPropositionRepas;
-    };
-
-    PropositionRepasDebutee.prototype.getEventType = function () {
-        return 1 /* PropositionRepasDebutee */;
     };
     return PropositionRepasDebutee;
 })();

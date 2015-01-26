@@ -1,9 +1,7 @@
-﻿import IEventDispatcher = require("./IEventDispatcher");
-import Infrastructure = require("./Infrastructure");
-import Immutables = require("../Immutables/Immutables");
-import IEventRepository = require("./IEventRepository");
+﻿import Infrastructure = require("../Infrastructure");
+import Immutables = require("../../Immutables/Immutables");
 export = InMemoryEventRepository
-class InMemoryEventRepository implements IEventRepository {
+class InMemoryEventRepository implements Infrastructure.IEventRepository {
     private database : Array<IEventLine>;
 
     constructor() {
@@ -27,8 +25,7 @@ class InMemoryEventRepository implements IEventRepository {
         });
 
         events.forEach((event) => {
-
-            IEventDispatcher.getInstance().dispatchEvent(event);
+            Infrastructure.IEventDispatcher.getInstance().dispatchEvent(event);
         });
     }
 }

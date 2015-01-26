@@ -2,7 +2,6 @@
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Login = require("../../Immutables/Utilisateur/Login");
 import Immutables = require("../../../Immutables/Immutables");
-import CommandeType = Infrastructure.CommandeType;
 export = OuvrirCompteUtilisateur
 class OuvrirCompteUtilisateur implements Infrastructure.ICommande {
 
@@ -20,11 +19,9 @@ class OuvrirCompteUtilisateur implements Infrastructure.ICommande {
         return this.idCompteUtilisateur;
     }
 
-    getAssociatedAggregateType(): Infrastructure.AggregateType {
-        return Infrastructure.AggregateType.CompteUtilisateur;
+    getAssociatedAggregateType(): Infrastructure.Referentiel.AggregateType {
+        return Infrastructure.Referentiel.AggregateType.CompteUtilisateur;
     }
 
-    getCommandType(): CommandeType {
-        return CommandeType.OuvrirCompteUtilisateur;
-    }
+    //getCommandType(): Infrastructure.Referentiel.CommandeType {return Infrastructure.Referentiel.CommandeType.OuvrirCompteUtilisateur;}
 }

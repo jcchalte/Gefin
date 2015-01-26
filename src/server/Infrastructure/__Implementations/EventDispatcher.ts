@@ -1,20 +1,20 @@
-﻿import Infrastructure = require("./Infrastructure");
-import IEventDispatcher = require("./IEventDispatcher");
+﻿import Infrastructure = require("../Infrastructure");
+
 export = EventDispatcher
-class EventDispatcher implements IEventDispatcher {
-    private registeredCallbacks: Array<{ eventType: Infrastructure.EventType; callbacks: Array<(event: Infrastructure.IEvent) => void> }>;
+class EventDispatcher implements Infrastructure.IEventDispatcher {
+    private registeredCallbacks: Array<{ eventConstructor: Function; callbacks: Array<(event: Infrastructure.IEvent) => void> }>;
 
     constructor() {
         this.registeredCallbacks = [];
     }
 
-    registerToEvent(eventType: Infrastructure.EventType, callback: (event: Infrastructure.IEvent) => void): void {
+    registerToEvent(eventConstructor: Function, callback: (event: Infrastructure.IEvent) => void): void {
         var matchingEntry = this.registeredCallbacks.filter((group) => {
-            return group.eventType === eventType;
+            return group.eventConstructor === eventConstructor;
         })[0];
         if (matchingEntry == null) {
             matchingEntry = {
-                eventType: eventType,
+                eventConstructor: eventConstructor,
                 callbacks: []
             };
             this.registeredCallbacks.push(matchingEntry);
@@ -23,9 +23,9 @@ class EventDispatcher implements IEventDispatcher {
         matchingEntry.callbacks.push(callback);
     }
 
-    unregisterToEvent(eventType: Infrastructure.EventType, callback: (event: Infrastructure.IEvent) => void): void {
+    unregisterToEvent(eventConstructor: Function, callback: (event: Infrastructure.IEvent) => void): void {
         var matchingEntry = this.registeredCallbacks.filter((group) => {
-            return group.eventType === eventType;
+            return group.eventConstructor === eventConstructor;
         })[0];
         matchingEntry.callbacks = matchingEntry.callbacks.filter((existingCallback) => {
             return existingCallback !== callback;
@@ -34,9 +34,9 @@ class EventDispatcher implements IEventDispatcher {
 
     dispatchEvent(event: Infrastructure.IEvent): void {
         
-        var eventType = event.getEventType();
+        var eventConstructor = event.constructor;
         var matchingEntry = this.registeredCallbacks.filter((group) => {
-            return group.eventType===eventType;
+            return group.eventConstructor === eventConstructor;
         })[0];
         if (matchingEntry) {
             matchingEntry.callbacks.forEach((callback) => {

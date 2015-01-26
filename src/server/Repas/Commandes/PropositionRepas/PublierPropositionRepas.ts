@@ -1,7 +1,7 @@
 ﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Immutables = require("../../../Immutables/Immutables");
-import CommandeType = Infrastructure.CommandeType;
+//import CommandeType = Infrastructure.Referentiel.CommandeType;
 export = PublierPropositionRepas
 class PublierPropositionRepas implements Infrastructure.ICommande{
 
@@ -15,9 +15,9 @@ class PublierPropositionRepas implements Infrastructure.ICommande{
         return this.idPropositionRepas;
     }
 
-    getAssociatedAggregateType(): Infrastructure.AggregateType {
-        return Infrastructure.AggregateType.PropositionRepas;
+    getAssociatedAggregateType(): Infrastructure.Referentiel.AggregateType {
+        return Infrastructure.Referentiel.AggregateType.PropositionRepas;
     }
 
-    getCommandType(): CommandeType { return CommandeType.PublierPropositionRepas; }
+    //getCommandType(): CommandeType { return CommandeType.PublierPropositionRepas; }
 }

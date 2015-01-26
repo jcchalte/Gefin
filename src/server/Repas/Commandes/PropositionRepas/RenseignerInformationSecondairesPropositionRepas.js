@@ -1,7 +1,6 @@
 ﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
 var Infrastructure = require("../../../Infrastructure/Infrastructure");
 
-var CommandeType = Infrastructure.CommandeType;
 var RenseignerInformationSecondairesPropositionRepas = (function () {
     function RenseignerInformationSecondairesPropositionRepas(idPropositionRepas, description, heureMaxReservation, montantMax, livraisonComprise) {
         this.idPropositionRepas = idPropositionRepas;
@@ -16,10 +15,6 @@ var RenseignerInformationSecondairesPropositionRepas = (function () {
 
     RenseignerInformationSecondairesPropositionRepas.prototype.getAssociatedAggregateType = function () {
         return 1 /* PropositionRepas */;
-    };
-
-    RenseignerInformationSecondairesPropositionRepas.prototype.getCommandType = function () {
-        return 2 /* RenseignerInformationSecondairesPropositionRepas */;
     };
     return RenseignerInformationSecondairesPropositionRepas;
 })();

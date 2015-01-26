@@ -1,6 +1,5 @@
 ﻿var Infrastructure = require("../../../Infrastructure/Infrastructure");
 
-var CommandeType = Infrastructure.CommandeType;
 var DebuterPropositionRepas = (function () {
     function DebuterPropositionRepas(idPropositionRepas, idUtilisateur, libelle, isPrive, invitations) {
         this.idPropositionRepas = idPropositionRepas;
@@ -15,10 +14,6 @@ var DebuterPropositionRepas = (function () {
 
     DebuterPropositionRepas.prototype.getAssociatedAggregateType = function () {
         return 1 /* PropositionRepas */;
-    };
-
-    DebuterPropositionRepas.prototype.getCommandType = function () {
-        return 1 /* DebuterPropositionRepas */;
     };
     return DebuterPropositionRepas;
 })();

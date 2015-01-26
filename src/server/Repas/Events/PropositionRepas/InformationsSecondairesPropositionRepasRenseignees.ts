@@ -31,5 +31,5 @@ class InformationsSecondairesPropositionRepasRenseignees implements Infrastructu
 
     getAggregateId(): Immutables.Guid { return this.idPropositionRepas; }
 
-    getEventType(): Infrastructure.EventType { return Infrastructure.EventType.InformationsSecondairesPropositionRepasRenseignees; }
+    //getEventType(): Infrastructure.Referentiel.EventType { return Infrastructure.Referentiel.EventType.InformationsSecondairesPropositionRepasRenseignees; }
 }

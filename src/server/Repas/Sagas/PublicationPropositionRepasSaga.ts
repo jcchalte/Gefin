@@ -1,17 +1,12 @@
-﻿import PropositionRepas = require("../Aggregate/PropositionRepas");
+﻿import InformationsSecondairesPropositionRepasRenseignees = require("../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
 import PublierPropositionRepas = require("../Commandes/PropositionRepas/PublierPropositionRepas");
-import IAggregateRepository = require("../../Infrastructure/IAggregateRepository");
-import IEventDispatcher = require("../../Infrastructure/IEventDispatcher");
 import Infrastructure = require("../../Infrastructure/Infrastructure");
-import CommandDispatcher = require("../../Infrastructure/CommandDispatcher");
 
 (() => {
-    IEventDispatcher.getInstance().registerToEvent(Infrastructure.EventType.InformationsSecondairesPropositionRepasRenseignees, (event) => {
-        var propositionRepas = <PropositionRepas>IAggregateRepository.getInstance().getAggregateById(Infrastructure.AggregateType.PropositionRepas, event.getAggregateId());
 
-        var publierPropositionRepas = new PublierPropositionRepas(propositionRepas.getId());
-
-        var commandeDispatcher = new CommandDispatcher();
+    Infrastructure.IEventDispatcher.getInstance().registerToEvent(InformationsSecondairesPropositionRepasRenseignees, (event) => {
+        var publierPropositionRepas = new PublierPropositionRepas(event.getAggregateId());
+        var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
         commandeDispatcher.dispatchCommand(publierPropositionRepas);
     });
 })();

@@ -2,7 +2,7 @@
 import Libelle = require("../../Immutables/PropositioRepas/Libelle");
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Immutables = require("../../../Immutables/Immutables");
-import CommandeType = Infrastructure.CommandeType;
+//import CommandeType = Infrastructure.Referentiel.CommandeType;
 export = DebuterPropositionRepas
 class DebuterPropositionRepas implements Infrastructure.ICommande{
 
@@ -25,9 +25,9 @@ class DebuterPropositionRepas implements Infrastructure.ICommande{
         return this.idPropositionRepas;
     }
 
-    getAssociatedAggregateType(): Infrastructure.AggregateType {
-        return Infrastructure.AggregateType.PropositionRepas;
+    getAssociatedAggregateType(): Infrastructure.Referentiel.AggregateType {
+        return Infrastructure.Referentiel.AggregateType.PropositionRepas;
     }
 
-    getCommandType(): CommandeType { return CommandeType.DebuterPropositionRepas; }
+    //getCommandType(): CommandeType { return CommandeType.DebuterPropositionRepas; }
 }

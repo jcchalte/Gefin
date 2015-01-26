@@ -1,7 +1,4 @@
-﻿import IEventDispatcher = require("./Infrastructure/IEventDispatcher");
-import CommandDispatcher = require("./Infrastructure/CommandDispatcher");
-
-import Infrastructure = require("./Infrastructure/Infrastructure");
+﻿import Infrastructure = require("./Infrastructure/Infrastructure");
 
 export function commande<TCommande>(commande: Infrastructure.ICommande): IThenContext<Infrastructure.ICommande> {
     return new ThenContext(commande);
@@ -22,15 +19,15 @@ export class ThenContext<TCommande> implements IThenContext<TCommande> {
 
         var success = false;
         var onEventTriggered = (event: Infrastructure.IEvent) => {
-            IEventDispatcher.getInstance().unregisterToEvent(expected.getEventType(), onEventTriggered);
+            Infrastructure.IEventDispatcher.getInstance().unregisterToEvent(expected.constructor, onEventTriggered);
 
             if (event.equals(expected)) {
                 success = true;
             }
         }
-        IEventDispatcher.getInstance().registerToEvent(expected.getEventType(), onEventTriggered);
+        Infrastructure.IEventDispatcher.getInstance().registerToEvent(expected.constructor, onEventTriggered);
 
-        var commandeDispatcher = new CommandDispatcher();
+        var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
         commandeDispatcher.dispatchCommand(this.commande);
         
         if(!success)

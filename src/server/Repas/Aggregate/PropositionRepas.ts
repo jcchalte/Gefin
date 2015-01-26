@@ -1,6 +1,6 @@
 ﻿import Libelle = require("../Immutables/PropositioRepas/Libelle");
 import PropositionRepasPubliee = require("../Events/PropositionRepas/PropositionRepasPubliee");
-import AggregateBase = require("../../Infrastructure/AggregateBase");
+
 import InformationsSecondairesPropositionRepasRenseignees = require("../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
 import RenseignerInformationSecondairesPropositionRepas = require("../Commandes/PropositionRepas/RenseignerInformationSecondairesPropositionRepas");
 import DebuterPropositionRepas = require("../Commandes/PropositionRepas/DebuterPropositionRepas");
@@ -10,84 +10,60 @@ import Immutables = require("../../Immutables/Immutables");
 import PublierPropositionRepas = require("../Commandes/PropositionRepas/PublierPropositionRepas");
 
 export = PropositionRepas;
-
-class PropositionRepas extends AggregateBase implements Infrastructure.IAggregate {
-
-    private aggregateId: Immutables.Guid;
-    private libelle: Libelle;
-    private description: Immutables.Description;
-    private heureMaxReservation: Immutables.Heure;
-    private montantMax: Immutables.Euros;
-    private livraisonComprise: boolean;
-    private isPrive: boolean;
-    private invitations: string;
-
-
-
-    constructor(aggregateId: Immutables.Guid) {
-        super();
-        this.aggregateId = aggregateId;
-    }
-
-    public getId() {
-        return this.aggregateId;
-    }
-
-    handleCommande(commande: Infrastructure.ICommande) {
-        switch (commande.getCommandType()) {
-            case Infrastructure.CommandeType.DebuterPropositionRepas:
-                this.handleCommandeDebuterPropositionRepas(<DebuterPropositionRepas>commande);
-                break;
-            case Infrastructure.CommandeType.RenseignerInformationSecondairesPropositionRepas:
-                this.handleCommandeRenseignerInformationSecondairesPropositionRepas(<RenseignerInformationSecondairesPropositionRepas>commande);
-                break;
-            case Infrastructure.CommandeType.PublierPropositionRepas:
-                this.handleCommandePublierPropositionRepas(<PublierPropositionRepas>commande);
-                break;
-        }
-    }
-
-    private handleCommandeDebuterPropositionRepas(commande: DebuterPropositionRepas) {
-        this.addEvent(new PropositionRepasDebutee(commande.idPropositionRepas,
+module PropositionRepas {
+    export function handleCommandeDebuterPropositionRepas(commande: DebuterPropositionRepas) {
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas,
             commande.idUtilisateur,
             commande.libelle,
             commande.isPrive,
-            commande.invitations));
+            commande.invitations)]);
     }
 
-    private handleCommandeRenseignerInformationSecondairesPropositionRepas(commande: RenseignerInformationSecondairesPropositionRepas) {
-        this.addEvent(new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas,
+    export function handleCommandeRenseignerInformationSecondairesPropositionRepas(commande: RenseignerInformationSecondairesPropositionRepas) {
+        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas,
             commande.description,
             commande.heureMaxReservation,
             commande.montantMax,
-            commande.livraisonComprise));
+            commande.livraisonComprise)]);
     }
 
+    export function handleCommandePublierPropositionRepas(commande: PublierPropositionRepas) {
+        var propositionRepasID = commande.getAggregateId();
+        var events = Infrastructure.IEventRepository.getInstance().getEventsForAggregate(propositionRepasID);
 
-    private handleCommandePublierPropositionRepas(commande: PublierPropositionRepas) {
-        this.addEvent(new PropositionRepasPubliee(this.aggregateId,
-            this.libelle,
-            this.description,
-            this.heureMaxReservation,
-            this.montantMax,
-            this.livraisonComprise,
-            this.isPrive,
-            this.invitations));
+        var state = new PropositionRepasState(events);
 
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas,
+            state.libelle,
+            state.description,
+            state.heureMaxReservation,
+            state.montantMax,
+            state.livraisonComprise,
+            state.isPrive,
+            state.invitations)]);
     }
+}
 
-    handleEvent(event: Infrastructure.IEvent) {
-        switch (event.getEventType()) {
-            case Infrastructure.EventType.PropositionRepasDebutee:
-                this.handleEventPropositionRepasDebutee(<PropositionRepasDebutee>event);
-                break;
-            case Infrastructure.EventType.InformationsSecondairesPropositionRepasRenseignees:
-                this.handleEventInformationsSecondairesPropositionRepasRenseignees(<InformationsSecondairesPropositionRepasRenseignees>event);
-                break;
-        }
+
+class PropositionRepasState extends Infrastructure.StateBase {
+    public idPropositionRepas: Immutables.Guid;
+    public libelle: Libelle;
+    public description: Immutables.Description;
+    public heureMaxReservation: Immutables.Heure;
+    public montantMax: Immutables.Euros;
+    public livraisonComprise: boolean;
+    public isPrive: boolean;
+    public invitations: string;
+
+    constructor(events: Infrastructure.IEvent[]) {
+        super();
+        events.forEach((event) => {
+            this.callHandleEventDynamically(event);
+        });
     }
 
     private handleEventPropositionRepasDebutee(event: PropositionRepasDebutee) {
+        this.idPropositionRepas = event.idPropositionRepas;
         this.libelle = event.libelle;
         this.invitations = event.invitations;
         this.isPrive = event.isPrive;
@@ -100,3 +76,4 @@ class PropositionRepas extends AggregateBase implements Infrastructure.IAggregat
         this.livraisonComprise = event.livraisonComprise;
     }
 }
+

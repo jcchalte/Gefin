@@ -1,9 +1,12 @@
-﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
+﻿import EventDispatcher = require("../../../Infrastructure/__Implementations/EventDispatcher");
+import InMemoryEventRepository = require("../../../Infrastructure/__Implementations/InMemoryEventRepository");
+import CommandDispatcher = require("../../../Infrastructure/__Implementations/CommandDispatcher");
+
 import PropositionRepasPubliee = require("../../Events/PropositionRepas/PropositionRepasPubliee");
 import InformationsSecondairesPropositionRepasRenseignees = require("../../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
 import RenseignerInformationSecondairesPropositionRepas = require("./RenseignerInformationSecondairesPropositionRepas");
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
-import CommandDispatcher = require("../../../Infrastructure/CommandDispatcher");
+
 
 import PropositionRepasDebutee = require("../../Events/PropositionRepas/PropositionRepasDebutee");
 import DebuterPropositionRepas = require("./DebuterPropositionRepas");
@@ -17,6 +20,8 @@ describe("Commandes >", () => {
 
 
         before((done) => {
+            Infrastructure.ServiceInjection.injectServices(new EventDispatcher(), new InMemoryEventRepository(), new CommandDispatcher());
+
             RepasSagaRegistration.registerSagas();
 
             done();
@@ -68,7 +73,7 @@ describe("Commandes >", () => {
 
 module Helpers {
     export function executerCommande(commande: Infrastructure.ICommande) {
-        var commandeDispatcher = new CommandDispatcher();
+        var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
         commandeDispatcher.dispatchCommand(commande);
     }
     export function debuterPropositionRepasPubliqueSansInvitation(commandeUuid: Immutables.Guid, utilisateurUuid, libelle: Libelle) {

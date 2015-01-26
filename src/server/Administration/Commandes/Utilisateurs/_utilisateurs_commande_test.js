@@ -1,4 +1,10 @@
 ﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
+var EventDispatcher = require("../../../Infrastructure/__Implementations/EventDispatcher");
+var InMemoryEventRepository = require("../../../Infrastructure/__Implementations/InMemoryEventRepository");
+var CommandDispatcher = require("../../../Infrastructure/__Implementations/CommandDispatcher");
+
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
+
 var Login = require("../../Immutables/Utilisateur/Login");
 var Immutables = require("../../../Immutables/Immutables");
 var OuvrirCompteUtilisateur = require("./OuvrirCompteUtilisateur");
@@ -10,6 +16,8 @@ describe("Commandes >", function () {
         var LOGIN_UTILISATEUR = new Login("chalteje");
 
         before(function (done) {
+            Infrastructure.ServiceInjection.injectServices(new EventDispatcher(), new InMemoryEventRepository(), new CommandDispatcher());
+
             done();
         });
 

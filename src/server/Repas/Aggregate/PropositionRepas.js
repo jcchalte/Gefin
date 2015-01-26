@@ -5,72 +5,57 @@
     d.prototype = new __();
 };
 var PropositionRepasPubliee = require("../Events/PropositionRepas/PropositionRepasPubliee");
-var AggregateBase = require("../../Infrastructure/AggregateBase");
+
 var InformationsSecondairesPropositionRepasRenseignees = require("../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
 
 var PropositionRepasDebutee = require("../Events/PropositionRepas/PropositionRepasDebutee");
 var Infrastructure = require("../../Infrastructure/Infrastructure");
 
-
-var PropositionRepas = (function (_super) {
-    __extends(PropositionRepas, _super);
-    function PropositionRepas(aggregateId) {
-        _super.call(this);
-        this.aggregateId = aggregateId;
+var PropositionRepas;
+(function (PropositionRepas) {
+    function handleCommandeDebuterPropositionRepas(commande) {
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas, commande.idUtilisateur, commande.libelle, commande.isPrive, commande.invitations)]);
     }
-    PropositionRepas.prototype.getId = function () {
-        return this.aggregateId;
-    };
+    PropositionRepas.handleCommandeDebuterPropositionRepas = handleCommandeDebuterPropositionRepas;
 
-    PropositionRepas.prototype.handleCommande = function (commande) {
-        switch (commande.getCommandType()) {
-            case 1 /* DebuterPropositionRepas */:
-                this.handleCommandeDebuterPropositionRepas(commande);
-                break;
-            case 2 /* RenseignerInformationSecondairesPropositionRepas */:
-                this.handleCommandeRenseignerInformationSecondairesPropositionRepas(commande);
-                break;
-            case 3 /* PublierPropositionRepas */:
-                this.handleCommandePublierPropositionRepas(commande);
-                break;
-        }
-    };
+    function handleCommandeRenseignerInformationSecondairesPropositionRepas(commande) {
+        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas, commande.description, commande.heureMaxReservation, commande.montantMax, commande.livraisonComprise)]);
+    }
+    PropositionRepas.handleCommandeRenseignerInformationSecondairesPropositionRepas = handleCommandeRenseignerInformationSecondairesPropositionRepas;
 
-    PropositionRepas.prototype.handleCommandeDebuterPropositionRepas = function (commande) {
-        this.addEvent(new PropositionRepasDebutee(commande.idPropositionRepas, commande.idUtilisateur, commande.libelle, commande.isPrive, commande.invitations));
-    };
+    function handleCommandePublierPropositionRepas(commande) {
+        var propositionRepasID = commande.getAggregateId();
+        var events = Infrastructure.IEventRepository.getInstance().getEventsForAggregate(propositionRepasID);
 
-    PropositionRepas.prototype.handleCommandeRenseignerInformationSecondairesPropositionRepas = function (commande) {
-        this.addEvent(new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas, commande.description, commande.heureMaxReservation, commande.montantMax, commande.livraisonComprise));
-    };
+        var state = new PropositionRepasState(events);
 
-    PropositionRepas.prototype.handleCommandePublierPropositionRepas = function (commande) {
-        this.addEvent(new PropositionRepasPubliee(this.aggregateId, this.libelle, this.description, this.heureMaxReservation, this.montantMax, this.livraisonComprise, this.isPrive, this.invitations));
-    };
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas, state.libelle, state.description, state.heureMaxReservation, state.montantMax, state.livraisonComprise, state.isPrive, state.invitations)]);
+    }
+    PropositionRepas.handleCommandePublierPropositionRepas = handleCommandePublierPropositionRepas;
+})(PropositionRepas || (PropositionRepas = {}));
 
-    PropositionRepas.prototype.handleEvent = function (event) {
-        switch (event.getEventType()) {
-            case 1 /* PropositionRepasDebutee */:
-                this.handleEventPropositionRepasDebutee(event);
-                break;
-            case 2 /* InformationsSecondairesPropositionRepasRenseignees */:
-                this.handleEventInformationsSecondairesPropositionRepasRenseignees(event);
-                break;
-        }
-    };
-
-    PropositionRepas.prototype.handleEventPropositionRepasDebutee = function (event) {
+var PropositionRepasState = (function (_super) {
+    __extends(PropositionRepasState, _super);
+    function PropositionRepasState(events) {
+        var _this = this;
+        _super.call(this);
+        events.forEach(function (event) {
+            _this.callHandleEventDynamically(event);
+        });
+    }
+    PropositionRepasState.prototype.handleEventPropositionRepasDebutee = function (event) {
+        this.idPropositionRepas = event.idPropositionRepas;
         this.libelle = event.libelle;
         this.invitations = event.invitations;
         this.isPrive = event.isPrive;
     };
 
-    PropositionRepas.prototype.handleEventInformationsSecondairesPropositionRepasRenseignees = function (event) {
+    PropositionRepasState.prototype.handleEventInformationsSecondairesPropositionRepasRenseignees = function (event) {
         this.description = event.description;
         this.heureMaxReservation = event.heureMaxReservation;
         this.montantMax = event.montantMax;
         this.livraisonComprise = event.livraisonComprise;
     };
-    return PropositionRepas;
-})(AggregateBase);
+    return PropositionRepasState;
+})(Infrastructure.StateBase);
 module.exports = PropositionRepas;

@@ -1,9 +1,11 @@
-﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
+﻿var EventDispatcher = require("../../../Infrastructure/__Implementations/EventDispatcher");
+var InMemoryEventRepository = require("../../../Infrastructure/__Implementations/InMemoryEventRepository");
+var CommandDispatcher = require("../../../Infrastructure/__Implementations/CommandDispatcher");
+
 var PropositionRepasPubliee = require("../../Events/PropositionRepas/PropositionRepasPubliee");
 var InformationsSecondairesPropositionRepasRenseignees = require("../../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
 var RenseignerInformationSecondairesPropositionRepas = require("./RenseignerInformationSecondairesPropositionRepas");
-
-var CommandDispatcher = require("../../../Infrastructure/CommandDispatcher");
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
 
 var PropositionRepasDebutee = require("../../Events/PropositionRepas/PropositionRepasDebutee");
 var DebuterPropositionRepas = require("./DebuterPropositionRepas");
@@ -15,6 +17,8 @@ var RepasSagaRegistration = require("../../Sagas/RepasSagaRegistration");
 describe("Commandes >", function () {
     describe("Proposition repas >", function () {
         before(function (done) {
+            Infrastructure.ServiceInjection.injectServices(new EventDispatcher(), new InMemoryEventRepository(), new CommandDispatcher());
+
             RepasSagaRegistration.registerSagas();
 
             done();
@@ -64,7 +68,7 @@ describe("Commandes >", function () {
 var Helpers;
 (function (Helpers) {
     function executerCommande(commande) {
-        var commandeDispatcher = new CommandDispatcher();
+        var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
         commandeDispatcher.dispatchCommand(commande);
     }
     Helpers.executerCommande = executerCommande;

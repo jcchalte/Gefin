@@ -1,4 +1,4 @@
-﻿var IEventDispatcher = require("./IEventDispatcher");
+﻿var Infrastructure = require("../Infrastructure");
 
 var InMemoryEventRepository = (function () {
     function InMemoryEventRepository() {
@@ -22,7 +22,7 @@ var InMemoryEventRepository = (function () {
         });
 
         events.forEach(function (event) {
-            IEventDispatcher.getInstance().dispatchEvent(event);
+            Infrastructure.IEventDispatcher.getInstance().dispatchEvent(event);
         });
     };
     return InMemoryEventRepository;

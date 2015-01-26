@@ -2,7 +2,7 @@
 
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Immutables = require("../../../Immutables/Immutables");
-import CommandeType = Infrastructure.CommandeType;
+//import CommandeType = Infrastructure.Referentiel.CommandeType;
 export = RenseignerInformationSecondairesPropositionRepas
 class RenseignerInformationSecondairesPropositionRepas implements Infrastructure.ICommande {
 
@@ -24,9 +24,9 @@ class RenseignerInformationSecondairesPropositionRepas implements Infrastructure
         return this.idPropositionRepas;
     }
 
-    getAssociatedAggregateType(): Infrastructure.AggregateType {
-        return Infrastructure.AggregateType.PropositionRepas;
+    getAssociatedAggregateType(): Infrastructure.Referentiel.AggregateType {
+        return Infrastructure.Referentiel.AggregateType.PropositionRepas;
     }
 
-    getCommandType(): CommandeType { return CommandeType.RenseignerInformationSecondairesPropositionRepas; }
+    //getCommandType(): CommandeType { return CommandeType.RenseignerInformationSecondairesPropositionRepas; }
 }

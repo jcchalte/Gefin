@@ -1,7 +1,4 @@
-﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
-var Infrastructure = require("../../../Infrastructure/Infrastructure");
-
-var InformationsSecondairesPropositionRepasRenseignees = (function () {
+﻿var InformationsSecondairesPropositionRepasRenseignees = (function () {
     function InformationsSecondairesPropositionRepasRenseignees(idPropositionRepas, description, heureMaxReservation, montantMax, livraisonComprise) {
         this.idPropositionRepas = idPropositionRepas;
         this.description = description;
@@ -15,10 +12,6 @@ var InformationsSecondairesPropositionRepasRenseignees = (function () {
 
     InformationsSecondairesPropositionRepasRenseignees.prototype.getAggregateId = function () {
         return this.idPropositionRepas;
-    };
-
-    InformationsSecondairesPropositionRepasRenseignees.prototype.getEventType = function () {
-        return 2 /* InformationsSecondairesPropositionRepasRenseignees */;
     };
     return InformationsSecondairesPropositionRepasRenseignees;
 })();
