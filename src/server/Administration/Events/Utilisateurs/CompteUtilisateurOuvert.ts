@@ -1,16 +1,18 @@
 ﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
+import ro = require("../../../ReadOnly");
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Login = require("../../Immutables/Utilisateur/Login");
 import Immutables = require("../../../Immutables/Immutables");
 
 export = CompteUtilisateurOuvert
 class CompteUtilisateurOuvert implements Infrastructure.IEvent {
-    public idCompteUtilisateur: Immutables.Guid;
-    public nomUtilisateur: Login;
+
+    public idCompteUtilisateur: ro.Field<Immutables.Guid>;
+    public nomUtilisateur: ro.Field<Login>;
 
     constructor(idCompteUtilisateur: Immutables.Guid, nomUtilisateur: Login) {
-        this.idCompteUtilisateur = idCompteUtilisateur;
-        this.nomUtilisateur = nomUtilisateur;
+        this.idCompteUtilisateur = ro.field(idCompteUtilisateur);
+        this.nomUtilisateur = ro.field(nomUtilisateur);
     }
 
     equals(left: CompteUtilisateurOuvert): boolean {
@@ -18,7 +20,5 @@ class CompteUtilisateurOuvert implements Infrastructure.IEvent {
             && this.nomUtilisateur.equals(left.nomUtilisateur);
     }
 
-    getAggregateId(): Immutables.Guid { return this.idCompteUtilisateur; }
-
-    //getEventType(): Infrastructure.Referentiel.EventType { return Infrastructure.Referentiel.EventType.CompteUtilisateurOuvert; }
+    getAggregateId(): Immutables.Guid { return this.idCompteUtilisateur(); }
 }

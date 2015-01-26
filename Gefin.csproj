@@ -2927,6 +2927,7 @@
     <TypeScriptCompile Include="src\server\Immutables\Immutables.ts" />
     <TypeScriptCompile Include="src\server\Immutables\_Guid_test.ts" />
     <TypeScriptCompile Include="src\server\Infrastructure\__Implementations\CommandDispatcher.ts" />
+    <TypeScriptCompile Include="src\server\ReadOnly.ts" />
     <TypeScriptCompile Include="src\server\Repas\Aggregate\PropositionRepas.ts" />
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\DebuterPropositionRepas.ts" />
     <TypeScriptCompile Include="src\server\Repas\Commandes\PropositionRepas\PublierPropositionRepas.ts" />

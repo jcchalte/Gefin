@@ -5,6 +5,6 @@ import OuvrirCompteUtilisateur = require("../Commandes/Utilisateurs/OuvrirCompte
 export = CompteUtilisateur;
 module CompteUtilisateur {
     export function handleCommandeOuvrirCompteUtilisateur(commande: OuvrirCompteUtilisateur) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new CompteUtilisateurOuvert(commande.getAggregateId(), commande.nomUtilisateur)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new CompteUtilisateurOuvert(commande.getAggregateId(), commande.nomUtilisateur())]);
     }
 }

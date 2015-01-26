@@ -30,7 +30,6 @@ class CommandDispatcher implements Infrastructure.ICommandDispatcher {
 
         if (moduleAAppeler[methodeAAppeler] == null || typeof moduleAAppeler[methodeAAppeler] !== "function")
             throw new Error("Le module " + moduleAAppeler.constructor.name + " n'implémente pas la méthode " + methodeAAppeler);
-
         moduleAAppeler[methodeAAppeler].call(this, commande);
     }
 

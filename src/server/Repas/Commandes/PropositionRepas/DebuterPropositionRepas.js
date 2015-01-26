@@ -1,15 +1,17 @@
 ﻿var Infrastructure = require("../../../Infrastructure/Infrastructure");
 
+var ro = require("../../../ReadOnly");
+
 var DebuterPropositionRepas = (function () {
     function DebuterPropositionRepas(idPropositionRepas, idUtilisateur, libelle, isPrive, invitations) {
-        this.idPropositionRepas = idPropositionRepas;
-        this.idUtilisateur = idUtilisateur;
-        this.libelle = libelle;
-        this.invitations = invitations;
-        this.isPrive = isPrive;
+        this.idPropositionRepas = ro.field(idPropositionRepas);
+        this.idUtilisateur = ro.field(idUtilisateur);
+        this.libelle = ro.field(libelle);
+        this.invitations = ro.field(invitations);
+        this.isPrive = ro.field(isPrive);
     }
     DebuterPropositionRepas.prototype.getAggregateId = function () {
-        return this.idPropositionRepas;
+        return this.idPropositionRepas();
     };
 
     DebuterPropositionRepas.prototype.getAssociatedAggregateType = function () {

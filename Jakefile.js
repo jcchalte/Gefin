@@ -139,7 +139,7 @@ var TestTasks;
         files: testsFileList.toArray(),
         mochaOptions: {
             ui: 'bdd',
-            reporter: 'nyan'
+            reporter: 'Spec'
         },
         prerequisites: ["beforeTest", "Typescript"]
     });

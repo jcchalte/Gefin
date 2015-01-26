@@ -1,12 +1,14 @@
 ﻿/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
 var Infrastructure = require("../../../Infrastructure/Infrastructure");
 
+var ro = require("../../../ReadOnly");
+
 var PublierPropositionRepas = (function () {
     function PublierPropositionRepas(idPropositionRepas) {
-        this.idPropositionRepas = idPropositionRepas;
+        this.idPropositionRepas = ro.field(idPropositionRepas);
     }
     PublierPropositionRepas.prototype.getAggregateId = function () {
-        return this.idPropositionRepas;
+        return this.idPropositionRepas();
     };
 
     PublierPropositionRepas.prototype.getAssociatedAggregateType = function () {

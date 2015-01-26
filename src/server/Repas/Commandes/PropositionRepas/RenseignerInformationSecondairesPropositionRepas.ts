@@ -2,22 +2,23 @@
 
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Immutables = require("../../../Immutables/Immutables");
-//import CommandeType = Infrastructure.Referentiel.CommandeType;
+import ro = require("../../../ReadOnly");
+
 export = RenseignerInformationSecondairesPropositionRepas
 class RenseignerInformationSecondairesPropositionRepas implements Infrastructure.ICommande {
 
-    public idPropositionRepas: Immutables.Guid;
-    public description: Immutables.Description;
-    public heureMaxReservation: Immutables.Heure;
-    public montantMax: Immutables.Euros;
-    public livraisonComprise: boolean;
+    public idPropositionRepas: ro.Field<Immutables.Guid>;
+    public description: ro.Field<Immutables.Description>;
+    public heureMaxReservation: ro.Field<Immutables.Heure>;
+    public montantMax: ro.Field<Immutables.Euros>;
+    public livraisonComprise: ro.Field<boolean>;
 
     constructor(idPropositionRepas: Immutables.Guid, description: Immutables.Description, heureMaxReservation: Immutables.Heure, montantMax: Immutables.Euros, livraisonComprise: boolean) {
-        this.idPropositionRepas = idPropositionRepas;
-        this.description = description;
-        this.heureMaxReservation = heureMaxReservation;
-        this.montantMax = montantMax;
-        this.livraisonComprise = livraisonComprise;
+        this.idPropositionRepas = ro.field(idPropositionRepas);
+        this.description = ro.field(description);
+        this.heureMaxReservation = ro.field(heureMaxReservation);
+        this.montantMax = ro.field(montantMax);
+        this.livraisonComprise = ro.field(livraisonComprise);
     }
 
     public getAggregateId() {

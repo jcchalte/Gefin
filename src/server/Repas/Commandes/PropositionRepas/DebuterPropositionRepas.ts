@@ -2,27 +2,28 @@
 import Libelle = require("../../Immutables/PropositioRepas/Libelle");
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Immutables = require("../../../Immutables/Immutables");
-//import CommandeType = Infrastructure.Referentiel.CommandeType;
+import ro = require("../../../ReadOnly");
+
 export = DebuterPropositionRepas
 class DebuterPropositionRepas implements Infrastructure.ICommande{
 
-    public idPropositionRepas: Immutables.Guid;
-    public idUtilisateur: Immutables.Guid;
-    public libelle: Libelle;
-    public invitations: string;
-    public isPrive: boolean;
+    public idPropositionRepas: ro.Field<Immutables.Guid>;
+    public idUtilisateur: ro.Field<Immutables.Guid>;
+    public libelle: ro.Field<Libelle>;
+    public invitations: ro.Field<string>;
+    public isPrive: ro.Field<boolean>;
     
     
     constructor(idPropositionRepas: Immutables.Guid, idUtilisateur: Immutables.Guid, libelle: Libelle, isPrive:boolean, invitations:string) {
-        this.idPropositionRepas = idPropositionRepas;
-        this.idUtilisateur = idUtilisateur;
-        this.libelle = libelle;
-        this.invitations = invitations;
-        this.isPrive = isPrive;
+        this.idPropositionRepas = ro.field(idPropositionRepas);
+        this.idUtilisateur = ro.field(idUtilisateur);
+        this.libelle = ro.field(libelle);
+        this.invitations = ro.field(invitations);
+        this.isPrive = ro.field(isPrive);
     }
 
     public getAggregateId() {
-        return this.idPropositionRepas;
+        return this.idPropositionRepas();
     }
 
     getAssociatedAggregateType(): Infrastructure.Referentiel.AggregateType {

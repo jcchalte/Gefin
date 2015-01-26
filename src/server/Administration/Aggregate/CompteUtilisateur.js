@@ -4,7 +4,7 @@ var CompteUtilisateurOuvert = require("../Events/Utilisateurs/CompteUtilisateurO
 var CompteUtilisateur;
 (function (CompteUtilisateur) {
     function handleCommandeOuvrirCompteUtilisateur(commande) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new CompteUtilisateurOuvert(commande.getAggregateId(), commande.nomUtilisateur)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new CompteUtilisateurOuvert(commande.getAggregateId(), commande.nomUtilisateur())]);
     }
     CompteUtilisateur.handleCommandeOuvrirCompteUtilisateur = handleCommandeOuvrirCompteUtilisateur;
 })(CompteUtilisateur || (CompteUtilisateur = {}));

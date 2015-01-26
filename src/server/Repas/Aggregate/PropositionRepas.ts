@@ -1,5 +1,6 @@
 ﻿import Libelle = require("../Immutables/PropositioRepas/Libelle");
 import PropositionRepasPubliee = require("../Events/PropositionRepas/PropositionRepasPubliee");
+import ro = require("../../ReadOnly");
 
 import InformationsSecondairesPropositionRepasRenseignees = require("../Events/PropositionRepas/InformationsSecondairesPropositionRepasRenseignees");
 import RenseignerInformationSecondairesPropositionRepas = require("../Commandes/PropositionRepas/RenseignerInformationSecondairesPropositionRepas");
@@ -12,19 +13,19 @@ import PublierPropositionRepas = require("../Commandes/PropositionRepas/PublierP
 export = PropositionRepas;
 module PropositionRepas {
     export function handleCommandeDebuterPropositionRepas(commande: DebuterPropositionRepas) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas,
-            commande.idUtilisateur,
-            commande.libelle,
-            commande.isPrive,
-            commande.invitations)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas(),
+            commande.idUtilisateur(),
+            commande.libelle(),
+            commande.isPrive(),
+            commande.invitations())]);
     }
 
     export function handleCommandeRenseignerInformationSecondairesPropositionRepas(commande: RenseignerInformationSecondairesPropositionRepas) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas,
-            commande.description,
-            commande.heureMaxReservation,
-            commande.montantMax,
-            commande.livraisonComprise)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas(),
+            commande.description(),
+            commande.heureMaxReservation(),
+            commande.montantMax(),
+            commande.livraisonComprise())]);
     }
 
     export function handleCommandePublierPropositionRepas(commande: PublierPropositionRepas) {
@@ -32,28 +33,28 @@ module PropositionRepas {
         var events = Infrastructure.IEventRepository.getInstance().getEventsForAggregate(propositionRepasID);
 
         var state = new PropositionRepasState(events);
-
-        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas,
-            state.libelle,
-            state.description,
-            state.heureMaxReservation,
-            state.montantMax,
-            state.livraisonComprise,
-            state.isPrive,
-            state.invitations)]);
+        
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas(),
+            state.libelle(),
+            state.description(),
+            state.heureMaxReservation(),
+            state.montantMax(),
+            state.livraisonComprise(),
+            state.isPrive(),
+            state.invitations())]);
     }
 }
 
 
 class PropositionRepasState extends Infrastructure.StateBase {
-    public idPropositionRepas: Immutables.Guid;
-    public libelle: Libelle;
-    public description: Immutables.Description;
-    public heureMaxReservation: Immutables.Heure;
-    public montantMax: Immutables.Euros;
-    public livraisonComprise: boolean;
-    public isPrive: boolean;
-    public invitations: string;
+    public idPropositionRepas: ro.Field<Immutables.Guid>;
+    public libelle: ro.Field<Libelle>;
+    public description: ro.Field<Immutables.Description>;
+    public heureMaxReservation: ro.Field<Immutables.Heure>;
+    public montantMax: ro.Field<Immutables.Euros>;
+    public livraisonComprise: ro.Field<boolean>;
+    public isPrive: ro.Field<boolean>;
+    public invitations: ro.Field<string>;
 
     constructor(events: Infrastructure.IEvent[]) {
         super();

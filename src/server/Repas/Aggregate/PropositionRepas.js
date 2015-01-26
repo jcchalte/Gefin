@@ -14,12 +14,12 @@ var Infrastructure = require("../../Infrastructure/Infrastructure");
 var PropositionRepas;
 (function (PropositionRepas) {
     function handleCommandeDebuterPropositionRepas(commande) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas, commande.idUtilisateur, commande.libelle, commande.isPrive, commande.invitations)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas(), commande.idUtilisateur(), commande.libelle(), commande.isPrive(), commande.invitations())]);
     }
     PropositionRepas.handleCommandeDebuterPropositionRepas = handleCommandeDebuterPropositionRepas;
 
     function handleCommandeRenseignerInformationSecondairesPropositionRepas(commande) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas, commande.description, commande.heureMaxReservation, commande.montantMax, commande.livraisonComprise)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas(), commande.description(), commande.heureMaxReservation(), commande.montantMax(), commande.livraisonComprise())]);
     }
     PropositionRepas.handleCommandeRenseignerInformationSecondairesPropositionRepas = handleCommandeRenseignerInformationSecondairesPropositionRepas;
 
@@ -29,7 +29,7 @@ var PropositionRepas;
 
         var state = new PropositionRepasState(events);
 
-        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas, state.libelle, state.description, state.heureMaxReservation, state.montantMax, state.livraisonComprise, state.isPrive, state.invitations)]);
+        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas(), state.libelle(), state.description(), state.heureMaxReservation(), state.montantMax(), state.livraisonComprise(), state.isPrive(), state.invitations())]);
     }
     PropositionRepas.handleCommandePublierPropositionRepas = handleCommandePublierPropositionRepas;
 })(PropositionRepas || (PropositionRepas = {}));
