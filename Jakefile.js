@@ -1,25 +1,22 @@
-﻿/// <reference path="Scripts/GlobalReferences.d.ts"/>
+/// <reference path="Scripts/GlobalReferences.d.ts"/>
 var fs = require("fs");
 var cliColor = require("cli-color");
-
 desc("Default task for everything");
 task("default", ["Typescript", "testServerCode", "testClient", "node"], function () {
     console.log(cliColor.green("\n\nOK !"));
 });
-
 var Configurations;
 (function (Configurations) {
+    var Node;
     (function (Node) {
         Node.desiredVersion = "v0.10.25";
-    })(Configurations.Node || (Configurations.Node = {}));
-    var Node = Configurations.Node;
-
+    })(Node = Configurations.Node || (Configurations.Node = {}));
+    var TempDirectories;
     (function (TempDirectories) {
         TempDirectories.generatedDir = "generated";
         TempDirectories.tempTestfileDir = TempDirectories.generatedDir + "/test";
-    })(Configurations.TempDirectories || (Configurations.TempDirectories = {}));
-    var TempDirectories = Configurations.TempDirectories;
-
+    })(TempDirectories = Configurations.TempDirectories || (Configurations.TempDirectories = {}));
+    var Karma;
     (function (Karma) {
         Karma.runnerOptions = {
             basePath: '.',
@@ -34,7 +31,8 @@ var Configurations;
                 { pattern: 'src/client/*.js', included: false }
             ],
             // list of files to exclude
-            exclude: [],
+            exclude: [
+            ],
             // preprocess matching files before serving them to the browser
             preprocessors: {},
             reporters: ['progress'],
@@ -47,7 +45,6 @@ var Configurations;
             browsers: [],
             singleRun: false
         };
-
         Karma.supportedBrowsers = [
             {
                 name: "IE8.0",
@@ -74,38 +71,31 @@ var Configurations;
                 karmaOutputRegex: /Chrome .*: Executed/
             }
         ];
-    })(Configurations.Karma || (Configurations.Karma = {}));
-    var Karma = Configurations.Karma;
+    })(Karma = Configurations.Karma || (Configurations.Karma = {}));
 })(Configurations || (Configurations = {}));
-
 var TypescriptTasks;
 (function (TypescriptTasks) {
     desc("Compilation des tous les typescript");
     task("Typescript", ["TypescriptClient", "TypescriptServer"]);
-
     desc("Compilation des typescript client");
     task("TypescriptClient", ["TypescriptClientArgumentFile"], function () {
         console.log("compilation Typescript client...");
         Helpers.executeCommand("tsc --module AMD @tscClientFiles.txt", true, complete, fail);
     }, { async: true });
-
     desc("Création @tscClientFiles");
     task("TypescriptClientArgumentFile", [], function () {
         Helpers.writeFileNamesToFile("tscClientFiles.txt", ["src/client/**/*.ts"], ["node_modules"]);
     });
-
     desc("Compilation des typescript server");
     task("TypescriptServer", ["TypescriptServerArgumentFile"], function () {
         console.log("compilation Typescript serveur...");
         Helpers.executeCommand("tsc --module commonJS @tscServerFiles.txt", true, complete, fail);
     }, { async: true });
-
     desc("Création @tscServerFiles");
     task("TypescriptServerArgumentFile", [], function () {
         Helpers.writeFileNamesToFile("tscServerFiles.txt", ["**/*.ts"], ["src/client", "node_modules", "packages"]);
     });
 })(TypescriptTasks || (TypescriptTasks = {}));
-
 var CleanTasks;
 (function (CleanTasks) {
     var GeneratedDir = Configurations.TempDirectories.generatedDir;
@@ -114,25 +104,20 @@ var CleanTasks;
         jake.rmRf(GeneratedDir);
     });
 })(CleanTasks || (CleanTasks = {}));
-
 var TestTasks;
 (function (TestTasks) {
     var TempTestfileDir = Configurations.TempDirectories.tempTestfileDir;
     desc("Test everything");
     task('test', ["testServerCode", "testClient"]);
-
     directory(TempTestfileDir);
     task("beforeTest", [TempTestfileDir, "node"], function () {
         console.log("Mocha server test");
     });
-
     var testsFileList = new jake.FileList();
     testsFileList.include("**/_*_test.js");
     testsFileList.exclude("node_modules");
     testsFileList.exclude("src/client");
-
     var mocha = require('jake-mocha');
-
     mocha.defineTask({
         name: 'testServerBody',
         description: 'Lancement des tests servers',
@@ -148,25 +133,22 @@ var TestTasks;
         console.log("OK !");
         console.log();
     });
-
     desc("Lancement des tests clients");
     task("testClient", ["Typescript"], function () {
         var karmaConfJSExpectedContent = "module.exports = function(config) {config.set(" + JSON.stringify(Configurations.Karma.runnerOptions) + ");};";
-
         var currentkarmaConfJSContent = fs.readFileSync("karma.conf.js", "utf8");
         if (currentkarmaConfJSContent !== karmaConfJSExpectedContent) {
             fs.writeFileSync("karma.conf.js", karmaConfJSExpectedContent);
             fail("karma.conf.js" + " content was changed. Server probably needs reset. Reset the server then start jake again.");
-        } else {
+        }
+        else {
             var runner = require('karma').runner;
-
             var oldStdOutputWrite = process.stdout.write;
             var karmaOutput = "";
             process.stdout.write = function (buffer) {
                 karmaOutput += buffer;
                 oldStdOutputWrite.apply(this, arguments);
             };
-
             runner.run(Configurations.Karma.runnerOptions, function (exitCode) {
                 if (exitCode)
                     fail("Karma has exited with exit code " + exitCode);
@@ -177,20 +159,16 @@ var TestTasks;
             });
         }
     }, { async: true });
-
     var KarmaHelpers;
     (function (KarmaHelpers) {
         function assertAllBrowsersAreTested(karmaOutput) {
             var untestedBrowsers = [];
-
             Configurations.Karma.supportedBrowsers.forEach(function (browser) {
                 var passed = browser.karmaOutputRegex.test(karmaOutput);
-
                 if (!passed) {
                     untestedBrowsers.push(browser.name);
                 }
             });
-
             if (untestedBrowsers.length > 0 && !process.env['loose']) {
                 console.log(untestedBrowsers.join(", ") + " are not tested (Use 'loose=true' to skip that test)");
                 fail();
@@ -199,21 +177,19 @@ var TestTasks;
         KarmaHelpers.assertAllBrowsersAreTested = assertAllBrowsersAreTested;
     })(KarmaHelpers || (KarmaHelpers = {}));
 })(TestTasks || (TestTasks = {}));
-
 var Utility;
 (function (Utility) {
     task("node", function () {
         console.log("detection de Node.js...");
-
         Helpers.executeCommand("node --version", false, function (stdout) {
             if (stdout.indexOf(Configurations.Node.desiredVersion) !== 0) {
                 fail("Incorrect node version. Expected " + Configurations.Node.desiredVersion + ", found " + stdout);
-            } else
+            }
+            else
                 complete();
         }, fail);
     }, { async: true });
 })(Utility || (Utility = {}));
-
 var Helpers;
 (function (Helpers) {
     function executeCommand(command, pipeOutputs, complete, fail) {
@@ -240,7 +216,6 @@ var Helpers;
         childProcess.run();
     }
     Helpers.executeCommand = executeCommand;
-
     function writeFileNamesToFile(fileName, includes, excludes) {
         var fileList = new jake.FileList();
         if (includes != null)
@@ -251,7 +226,6 @@ var Helpers;
             excludes.forEach(function (exclude) {
                 fileList.exclude(exclude);
             });
-
         var fileContent = fileList.toArray().join(" ");
         fs.writeFileSync(fileName, fileContent);
     }

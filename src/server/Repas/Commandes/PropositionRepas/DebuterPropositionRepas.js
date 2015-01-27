@@ -1,7 +1,5 @@
-﻿var Infrastructure = require("../../../Infrastructure/Infrastructure");
-
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
 var ro = require("../../../ReadOnly");
-
 var DebuterPropositionRepas = (function () {
     function DebuterPropositionRepas(idPropositionRepas, idUtilisateur, libelle, isPrive, invitations) {
         this.idPropositionRepas = ro.field(idPropositionRepas);
@@ -13,7 +11,6 @@ var DebuterPropositionRepas = (function () {
     DebuterPropositionRepas.prototype.getAggregateId = function () {
         return this.idPropositionRepas();
     };
-
     DebuterPropositionRepas.prototype.getAssociatedAggregateType = function () {
         return 1 /* PropositionRepas */;
     };

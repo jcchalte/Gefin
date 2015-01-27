@@ -1,6 +1,6 @@
-﻿var http = require("http");
+/// <reference path="../../Scripts/GlobalReferences.d.ts"/>
+var http = require("http");
 var fs = require("fs");
-
 var Server = (function () {
     function Server() {
         var _this = this;
@@ -8,7 +8,8 @@ var Server = (function () {
         this.server.on("request", function (request, response) {
             if (request.url === "/" || request.url === "/Index") {
                 _this.serveFile(response, _this.homepageFilePath);
-            } else {
+            }
+            else {
                 response.statusCode = 404;
                 _this.serveFile(response, _this.errorpageFilePath);
             }
@@ -25,7 +26,6 @@ var Server = (function () {
         if (errorpageFilePath === null || errorpageFilePath === "") {
             throw "Le fichier d'erreur est obligatoire";
         }
-
         if (this.isRunning)
             throw "Le serveur est déjà démarré.";
         this.homepageFilePath = homepageFilePath;
@@ -33,14 +33,12 @@ var Server = (function () {
         this.isRunning = true;
         this.server.listen(port, done);
     };
-
     Server.prototype.stop = function () {
         if (!this.isRunning)
             throw "Le serveur n'est pas démarré.";
         this.isRunning = false;
         this.server.close();
     };
-
     Server.prototype.serveFile = function (response, filePath) {
         fs.readFile(filePath, function (err, data) {
             if (err)

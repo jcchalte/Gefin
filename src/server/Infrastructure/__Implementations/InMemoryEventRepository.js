@@ -1,5 +1,3 @@
-﻿var Infrastructure = require("../Infrastructure");
-
 var InMemoryEventRepository = (function () {
     function InMemoryEventRepository() {
         this.database = [];
@@ -11,7 +9,6 @@ var InMemoryEventRepository = (function () {
             return item.event;
         }).slice();
     };
-
     InMemoryEventRepository.prototype.commitEvents = function (events) {
         var _this = this;
         events.forEach(function (event) {
@@ -19,10 +16,6 @@ var InMemoryEventRepository = (function () {
                 aggregateId: event.getAggregateId(),
                 event: event
             });
-        });
-
-        events.forEach(function (event) {
-            Infrastructure.IEventDispatcher.getInstance().dispatchEvent(event);
         });
     };
     return InMemoryEventRepository;

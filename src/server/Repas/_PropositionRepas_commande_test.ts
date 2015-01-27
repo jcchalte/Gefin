@@ -1,4 +1,7 @@
-﻿import EventDispatcher = require("../Infrastructure/__Implementations/EventDispatcher");
+﻿import CompteUtilisateurOuvert = require("../Administration/Events/Utilisateurs/CompteUtilisateurOuvert");
+import Login = require("../Administration/Immutables/Utilisateur/Login");
+
+import EventDispatcher = require("../Infrastructure/__Implementations/EventDispatcher");
 import InMemoryEventRepository = require("../Infrastructure/__Implementations/InMemoryEventRepository");
 import CommandDispatcher = require("../Infrastructure/__Implementations/CommandDispatcher");
 
@@ -12,12 +15,16 @@ import PropositionRepasDebutee = require("./Events/PropositionRepas/PropositionR
 import DebuterPropositionRepas = require("./Commandes/PropositionRepas/DebuterPropositionRepas");
 import Libelle = require("./Immutables/PropositioRepas/Libelle");
 import Immutables = require("../Immutables/Immutables");
-import when = require("../when");
+import TestThat = require("../TestThat");
+
 import RepasSagaRegistration = require("./Sagas/RepasSagaRegistration");
 
 describe("Commandes >", () => {
     describe("Proposition repas >", () => {
 
+        var UTILISATEUR_TEST = new Immutables.Guid();
+
+      
 
         before((done) => {
             Infrastructure.ServiceInjection.injectServices(new EventDispatcher(), new InMemoryEventRepository(), new CommandDispatcher());
@@ -28,55 +35,49 @@ describe("Commandes >", () => {
         });
 
         it("given un utilisateur existant when un utilisateur débute une proposition de repas, then une proposition de repas est débutée", (done) => {
-            var utilisateurUuid = new Immutables.Guid();
 
             var propositionRepasUuid = new Immutables.Guid();
-            var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
-
-            when.commande(debuterPropositionRepas).thenExpect(new PropositionRepasDebutee(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'), false, ''));
-
-            done();
+            var debuterPropositionRepas = new DebuterPropositionRepas(propositionRepasUuid, UTILISATEUR_TEST, new Libelle('Pizzicato'), false, '');
+            TestThat.given(unUtilisateurExistant())
+                .when(debuterPropositionRepas)
+                .then(new PropositionRepasDebutee(propositionRepasUuid, UTILISATEUR_TEST, new Libelle('Pizzicato'), false, ''), done);
         });
 
 
 
-        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then les informations secondaires de la proposition sont renseignés", (done) => {
-            var utilisateurUuid = new Immutables.Guid();
+        it("given un utilisateur créé et une une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then les informations secondaires de la proposition sont renseignés", (done) => {
             var propositionRepasUuid = new Immutables.Guid();
-            var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
-            Helpers.executerCommande(debuterPropositionRepas);
-
+            
             var renseignerInformationSecondairesPropositionRepas = new RenseignerInformationSecondairesPropositionRepas(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true);
 
-            when.commande(renseignerInformationSecondairesPropositionRepas).thenExpect(new InformationsSecondairesPropositionRepasRenseignees(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true));
-            done();
+            TestThat.given(unUtilisateurExistant())
+                .and(unePropositionDeRepasDebutee(propositionRepasUuid, new Libelle('Pizzicato')))
+                .when(renseignerInformationSecondairesPropositionRepas)
+                .then(new InformationsSecondairesPropositionRepasRenseignees(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true), done);
         });
 
 
-        it("given une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then la proposition de repas est publiée", (done) => {
-            var utilisateurUuid = new Immutables.Guid();
+        it("given un utilisateur créé  et une proposition de repas débutée when un utilisateur renseigne les informations secondaires de la proposition, then la proposition de repas est publiée", (done) => {
             var propositionRepasUuid = new Immutables.Guid();
-            var debuterPropositionRepas = Helpers.debuterPropositionRepasPubliqueSansInvitation(propositionRepasUuid, utilisateurUuid, new Libelle('Pizzicato'));
-            Helpers.executerCommande(debuterPropositionRepas);
-
             var renseignerInformationSecondairesPropositionRepas = new RenseignerInformationSecondairesPropositionRepas(propositionRepasUuid, new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true);
 
-            when.commande(renseignerInformationSecondairesPropositionRepas).thenExpect(new PropositionRepasPubliee(propositionRepasUuid, new Libelle('Pizzicato'), new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true, false, ''));
-            done();
+            TestThat.given(unUtilisateurExistant())
+                .and(unePropositionDeRepasDebutee(propositionRepasUuid, new Libelle('Pizzicato')))
+                .when(renseignerInformationSecondairesPropositionRepas)
+                .then(new PropositionRepasPubliee(propositionRepasUuid, new Libelle('Pizzicato'), new Immutables.Description('Ma description plus complète'), new Immutables.Heure(11, 30), new Immutables.Euros(7.90), true, false, ''), done);
         });
 
         after((done) => {
             done();
         });
+
+        function unUtilisateurExistant(): Infrastructure.IEvent[] {
+            return [new CompteUtilisateurOuvert(UTILISATEUR_TEST, new Login("utilisateurTest"))];
+        };
+
+        function unePropositionDeRepasDebutee(propositionRepasUuid: Immutables.Guid, libelle: Libelle): Infrastructure.IEvent[] {
+            return [new PropositionRepasDebutee(propositionRepasUuid, UTILISATEUR_TEST, libelle, false, '')];
+        };
+
     });
 });
-
-module Helpers {
-    export function executerCommande(commande: Infrastructure.ICommande) {
-        var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
-        commandeDispatcher.dispatchCommand(commande);
-    }
-    export function debuterPropositionRepasPubliqueSansInvitation(commandeUuid: Immutables.Guid, utilisateurUuid, libelle: Libelle) {
-        return new DebuterPropositionRepas(commandeUuid, utilisateurUuid, libelle, false, "");
-    }
-}

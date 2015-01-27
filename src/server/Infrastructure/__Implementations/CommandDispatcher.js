@@ -1,7 +1,6 @@
-﻿var Infrastructure = require("../Infrastructure");
+var Infrastructure = require("../Infrastructure");
 var PropositionRepas = require("../../Repas/Aggregate/PropositionRepas");
 var CompteUtilisateur = require("../../Administration/Aggregate/CompteUtilisateur");
-
 var CommandDispatcher = (function () {
     function CommandDispatcher() {
     }
@@ -10,9 +9,8 @@ var CommandDispatcher = (function () {
         //2. Appeler la méthode "Handle" correspondant à la commande
         //      - Cette méthode regarde par rapport à ses projections si la commande est envisageable
         //      - En fonction de ses projections, elle rajoute des events dans la liste d'event à publier
-        //3. On "Sauvegarde" les évènements à publier, c'est à dire qu'on va trigger tous les handlers et qu'on sauvegarde dans un repository
+        //3. On "Sauvegarde" les évènements à publier, c'est à dire qu'on va trigger tous les handlers et qu'on sauvegarde dans un repository   
         var aggregateType = commande.getAssociatedAggregateType();
-
         var moduleAAppeler;
         switch (aggregateType) {
             case 1 /* PropositionRepas */:
@@ -25,7 +23,6 @@ var CommandDispatcher = (function () {
                 throw new Error("NotImplementedException");
         }
         var methodeAAppeler = "handleCommande" + commande.constructor.name;
-
         if (moduleAAppeler[methodeAAppeler] == null || typeof moduleAAppeler[methodeAAppeler] !== "function")
             throw new Error("Le module " + moduleAAppeler.constructor.name + " n'implémente pas la méthode " + methodeAAppeler);
         moduleAAppeler[methodeAAppeler].call(this, commande);

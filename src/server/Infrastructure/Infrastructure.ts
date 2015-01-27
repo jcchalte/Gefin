@@ -42,7 +42,12 @@ export interface ICommande {
     //getCommandType(): Referentiel.CommandeType;
 }
 
-
+export function commitEvents(events: IEvent[]) {
+    IEventRepository.getInstance().commitEvents(events);
+    events.forEach((event) => {
+        IEventDispatcher.getInstance().dispatchEvent(event);
+    });
+}
 
 export interface ICommandDispatcher {
     dispatchCommand(commande: ICommande): void;
@@ -93,6 +98,8 @@ export class StateBase {
         var methodName = "handleEvent" + (<any>event.constructor).name;
         if (this[methodName] != null) {
             this[methodName](event);
+        } else {
+            console.log(methodName+' non trouvé');
         }
     }
 }

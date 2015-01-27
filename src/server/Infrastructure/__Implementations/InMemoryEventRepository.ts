@@ -23,10 +23,6 @@ class InMemoryEventRepository implements Infrastructure.IEventRepository {
                 event: event
             });
         });
-
-        events.forEach((event) => {
-            Infrastructure.IEventDispatcher.getInstance().dispatchEvent(event);
-        });
     }
 }
 

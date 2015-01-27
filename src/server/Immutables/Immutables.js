@@ -1,5 +1,4 @@
-﻿var nodeUuid = require("node-uuid");
-
+var nodeUuid = require("node-uuid");
 var Titre = (function () {
     function Titre(value) {
         this.innerValue = value;
@@ -7,14 +6,12 @@ var Titre = (function () {
     Titre.prototype.value = function () {
         return this.innerValue;
     };
-
     Titre.prototype.equals = function (left) {
         return this.value() === left.value();
     };
     return Titre;
 })();
 exports.Titre = Titre;
-
 var Guid = (function () {
     function Guid(innerValue) {
         if (innerValue != null) {
@@ -22,21 +19,20 @@ var Guid = (function () {
             if (!uuidRegex.test(innerValue))
                 throw Error("invalid UUID");
             this.value = innerValue;
-        } else {
+        }
+        else {
             this.value = nodeUuid.v4();
         }
     }
     Guid.prototype.innerValue = function () {
         return this.value;
     };
-
     Guid.prototype.equals = function (other) {
         return this.innerValue() === other.innerValue();
     };
     return Guid;
 })();
 exports.Guid = Guid;
-
 var Description = (function () {
     function Description(value) {
         this.innerValue = value;
@@ -44,14 +40,12 @@ var Description = (function () {
     Description.prototype.value = function () {
         return this.innerValue;
     };
-
     Description.prototype.equals = function (left) {
         return this.value() === left.value();
     };
     return Description;
 })();
 exports.Description = Description;
-
 var Heure = (function () {
     function Heure(heure, minutes) {
         this.heure = heure;
@@ -63,7 +57,6 @@ var Heure = (function () {
     return Heure;
 })();
 exports.Heure = Heure;
-
 var Euros = (function () {
     function Euros(montant) {
         this.montant = montant;

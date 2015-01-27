@@ -12,16 +12,20 @@ import PublierPropositionRepas = require("../Commandes/PropositionRepas/PublierP
 
 export = PropositionRepas;
 module PropositionRepas {
+
+
     export function handleCommandeDebuterPropositionRepas(commande: DebuterPropositionRepas) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasDebutee(commande.idPropositionRepas(),
-            commande.idUtilisateur(),
-            commande.libelle(),
-            commande.isPrive(),
-            commande.invitations())]);
+        Infrastructure.commitEvents([
+            new PropositionRepasDebutee(commande.idPropositionRepas(),
+                commande.idUtilisateur(),
+                commande.libelle(),
+                commande.isPrive(),
+                commande.invitations())
+        ]);
     }
 
     export function handleCommandeRenseignerInformationSecondairesPropositionRepas(commande: RenseignerInformationSecondairesPropositionRepas) {
-        Infrastructure.IEventRepository.getInstance().commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas(),
+        Infrastructure.commitEvents([new InformationsSecondairesPropositionRepasRenseignees(commande.idPropositionRepas(),
             commande.description(),
             commande.heureMaxReservation(),
             commande.montantMax(),
@@ -33,8 +37,8 @@ module PropositionRepas {
         var events = Infrastructure.IEventRepository.getInstance().getEventsForAggregate(propositionRepasID);
 
         var state = new PropositionRepasState(events);
-        
-        Infrastructure.IEventRepository.getInstance().commitEvents([new PropositionRepasPubliee(state.idPropositionRepas(),
+
+        Infrastructure.commitEvents([new PropositionRepasPubliee(state.idPropositionRepas(),
             state.libelle(),
             state.description(),
             state.heureMaxReservation(),
@@ -43,6 +47,8 @@ module PropositionRepas {
             state.isPrive(),
             state.invitations())]);
     }
+
+
 }
 
 

@@ -1,12 +1,12 @@
-﻿(function (Referentiel) {
+var Referentiel;
+(function (Referentiel) {
     (function (AggregateType) {
         AggregateType[AggregateType["CompteUtilisateur"] = 0] = "CompteUtilisateur";
         AggregateType[AggregateType["PropositionRepas"] = 1] = "PropositionRepas";
     })(Referentiel.AggregateType || (Referentiel.AggregateType = {}));
     var AggregateType = Referentiel.AggregateType;
-})(exports.Referentiel || (exports.Referentiel = {}));
-var Referentiel = exports.Referentiel;
-
+})(Referentiel = exports.Referentiel || (exports.Referentiel = {}));
+var ServiceInjection;
 (function (ServiceInjection) {
     function injectServices(eventDispatcher, eventRepository, commandDispatcher) {
         IEventDispatcher.eventDispatcher = eventDispatcher;
@@ -14,42 +14,41 @@ var Referentiel = exports.Referentiel;
         ICommandDispatcher.commandDispatcher = commandDispatcher;
     }
     ServiceInjection.injectServices = injectServices;
-})(exports.ServiceInjection || (exports.ServiceInjection = {}));
-var ServiceInjection = exports.ServiceInjection;
-
+})(ServiceInjection = exports.ServiceInjection || (exports.ServiceInjection = {}));
+function commitEvents(events) {
+    IEventRepository.getInstance().commitEvents(events);
+    events.forEach(function (event) {
+        IEventDispatcher.getInstance().dispatchEvent(event);
+    });
+}
+exports.commitEvents = commitEvents;
 // ReSharper disable once InconsistentNaming
+var ICommandDispatcher;
 (function (ICommandDispatcher) {
     ICommandDispatcher.commandDispatcher;
-
     function getInstance() {
         return ICommandDispatcher.commandDispatcher;
     }
     ICommandDispatcher.getInstance = getInstance;
-})(exports.ICommandDispatcher || (exports.ICommandDispatcher = {}));
-var ICommandDispatcher = exports.ICommandDispatcher;
-
+})(ICommandDispatcher = exports.ICommandDispatcher || (exports.ICommandDispatcher = {}));
 // ReSharper disable once InconsistentNaming
+var IEventRepository;
 (function (IEventRepository) {
     IEventRepository.eventRepository;
-
     function getInstance() {
         return IEventRepository.eventRepository;
     }
     IEventRepository.getInstance = getInstance;
-})(exports.IEventRepository || (exports.IEventRepository = {}));
-var IEventRepository = exports.IEventRepository;
-
+})(IEventRepository = exports.IEventRepository || (exports.IEventRepository = {}));
 // ReSharper disable once InconsistentNaming
+var IEventDispatcher;
 (function (IEventDispatcher) {
     IEventDispatcher.eventDispatcher;
-
     function getInstance() {
         return IEventDispatcher.eventDispatcher;
     }
     IEventDispatcher.getInstance = getInstance;
-})(exports.IEventDispatcher || (exports.IEventDispatcher = {}));
-var IEventDispatcher = exports.IEventDispatcher;
-
+})(IEventDispatcher = exports.IEventDispatcher || (exports.IEventDispatcher = {}));
 var StateBase = (function () {
     function StateBase() {
     }
@@ -57,6 +56,9 @@ var StateBase = (function () {
         var methodName = "handleEvent" + event.constructor.name;
         if (this[methodName] != null) {
             this[methodName](event);
+        }
+        else {
+            console.log(methodName + ' non trouvé');
         }
     };
     return StateBase;

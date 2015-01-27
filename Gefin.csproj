@@ -9,7 +9,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -2947,7 +2947,7 @@
     <TypeScriptCompile Include="src\server\Infrastructure\__Implementations\InMemoryEventRepository.ts" />
     <TypeScriptCompile Include="src\server\Repas\Sagas\RepasSagaRegistration.ts" />
     <TypeScriptCompile Include="src\server\server.ts" />
-    <TypeScriptCompile Include="src\server\when.ts" />
+    <TypeScriptCompile Include="src\server\TestThat.ts" />
     <TypeScriptCompile Include="src\server\_server_test.ts" />
     <TypeScriptCompile Include="src\_smoke_test.ts" />
   </ItemGroup>

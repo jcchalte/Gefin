@@ -1,4 +1,4 @@
-﻿var ReadOnly;
+var ReadOnly;
 (function (ReadOnly) {
     function field(value) {
         var result = (function () {

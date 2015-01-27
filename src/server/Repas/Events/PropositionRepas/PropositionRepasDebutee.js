@@ -1,5 +1,4 @@
-﻿var ro = require("../../../ReadOnly");
-
+var ro = require("../../../ReadOnly");
 var PropositionRepasDebutee = (function () {
     function PropositionRepasDebutee(idPropositionRepas, idUtilisateur, libelle, isPrive, invitations) {
         this.idPropositionRepas = ro.field(idPropositionRepas);
@@ -11,7 +10,6 @@ var PropositionRepasDebutee = (function () {
     PropositionRepasDebutee.prototype.equals = function (left) {
         return this.idPropositionRepas.equals(left.idPropositionRepas) && this.idUtilisateur.equals(left.idUtilisateur) && this.libelle.equals(left.libelle) && this.invitations.equals(left.invitations) && this.isPrive.equals(left.isPrive);
     };
-
     PropositionRepasDebutee.prototype.getAggregateId = function () {
         return this.idPropositionRepas();
     };

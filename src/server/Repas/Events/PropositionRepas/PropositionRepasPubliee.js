@@ -1,5 +1,4 @@
-﻿var ro = require("../../../ReadOnly");
-
+var ro = require("../../../ReadOnly");
 var PropositionRepasPubliee = (function () {
     function PropositionRepasPubliee(idPropositionRepas, libelle, description, heureMaxReservation, montantMax, livraisonComprise, isPrive, invitations) {
         this.idPropositionRepas = ro.field(idPropositionRepas);
@@ -14,7 +13,6 @@ var PropositionRepasPubliee = (function () {
     PropositionRepasPubliee.prototype.equals = function (left) {
         return this.idPropositionRepas.equals(left.idPropositionRepas) && this.libelle.equals(left.libelle) && this.description.equals(left.description) && this.heureMaxReservation.equals(left.heureMaxReservation) && this.montantMax.equals(left.montantMax) && this.livraisonComprise.equals(left.livraisonComprise) && this.isPrive.equals(left.isPrive) && this.invitations.equals(left.invitations);
     };
-
     PropositionRepasPubliee.prototype.getAggregateId = function () {
         return this.idPropositionRepas();
     };

@@ -1,13 +1,11 @@
-﻿/// <reference path="../../Scripts/GlobalReferences.d.ts"/>
+/// <reference path="../../Scripts/GlobalReferences.d.ts"/>
 var server = require('./server');
 var assert = require("assert");
 require("should");
 var http = require("http");
 var fs = require("fs");
-
 var BASE_PORT = 8080;
 var BASE_URL = "http://localhost:" + BASE_PORT;
-
 describe("Serveur >", function () {
     describe("Cas classiques >", function () {
         var myServer;
@@ -16,7 +14,6 @@ describe("Serveur >", function () {
         var expectedData = "Ceci est dans un fichier";
         var testErrorFile = testDir + "/404.html";
         var expectedData404 = "Erreur 404, contenu du fichier";
-
         before(function (done) {
             myServer = new server();
             myServer.start(BASE_PORT, testFile, testErrorFile, function () {
@@ -25,7 +22,6 @@ describe("Serveur >", function () {
                 done();
             });
         });
-
         it('Server renvoit un fichier sur la page de garde', function (done) {
             httpTextGet(BASE_URL, function (response, data) {
                 response.statusCode.should.equal(200);
@@ -34,7 +30,6 @@ describe("Serveur >", function () {
                 done();
             });
         });
-
         it('Server renvoit un fichier sur index.html', function (done) {
             httpTextGet(BASE_URL, function (response, data) {
                 response.statusCode.should.equal(200);
@@ -43,7 +38,6 @@ describe("Serveur >", function () {
                 done();
             });
         });
-
         it('Server renvoit une erreur 404 dans les autres pages', function (done) {
             httpTextGet(BASE_URL + "/bargle", function (response, data) {
                 response.statusCode.should.equal(404);
@@ -52,7 +46,6 @@ describe("Serveur >", function () {
                 done();
             });
         });
-
         after(function () {
             fs.unlinkSync(testFile);
             assert.ok(!fs.existsSync(testFile), "Le fichier " + testFile + " n'est pas supprimé");
@@ -76,7 +69,6 @@ describe("Serveur >", function () {
                 });
             }, "Une homepage est nécessaire");
         });
-
         it("Démarrer un serveur sans un fichier d'erreur à service n'est pas possible", function () {
             var myServer = new server();
             assert.throws(function () {
@@ -84,7 +76,6 @@ describe("Serveur >", function () {
                 });
             }, "Un fichier d'erreur est nécessaire");
         });
-
         it("Démarrer un serveur alors qu\'il est déjà démarré n'est pas possible", function () {
             var myServer = new server();
             myServer.start(BASE_PORT, "test.html", "404.html", function () {
@@ -93,10 +84,8 @@ describe("Serveur >", function () {
                 myServer.start(BASE_PORT, "test.html", "404.html", function () {
                 });
             }, "Il ne doit pas être possible de redémarrer le serveur s'il est déjà démarré");
-
             myServer.stop();
         });
-
         it("Arrêter un serveur avant qu\'il ne soit démarré n'est pas possible", function () {
             var myServer = new server();
             assert.throws(function () {
@@ -105,7 +94,6 @@ describe("Serveur >", function () {
         });
     });
 });
-
 function httpTextGet(url, callback) {
     http.get(url, function (response) {
         var data = "";
