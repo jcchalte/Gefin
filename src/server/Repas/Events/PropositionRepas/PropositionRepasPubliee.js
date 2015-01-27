@@ -1,3 +1,4 @@
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
 var ro = require("../../../ReadOnly");
 var PropositionRepasPubliee = (function () {
     function PropositionRepasPubliee(idPropositionRepas, libelle, description, heureMaxReservation, montantMax, livraisonComprise, isPrive, invitations) {
@@ -15,6 +16,9 @@ var PropositionRepasPubliee = (function () {
     };
     PropositionRepasPubliee.prototype.getAggregateId = function () {
         return this.idPropositionRepas();
+    };
+    PropositionRepasPubliee.prototype.getAggregateType = function () {
+        return 1 /* PropositionRepas */;
     };
     return PropositionRepasPubliee;
 })();

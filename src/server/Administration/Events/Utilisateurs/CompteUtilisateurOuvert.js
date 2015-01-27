@@ -1,5 +1,7 @@
 /// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
 var ro = require("../../../ReadOnly");
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
+var AggregateType = Infrastructure.Referentiel.AggregateType;
 var CompteUtilisateurOuvert = (function () {
     function CompteUtilisateurOuvert(idCompteUtilisateur, nomUtilisateur) {
         this.idCompteUtilisateur = ro.field(idCompteUtilisateur);
@@ -10,6 +12,9 @@ var CompteUtilisateurOuvert = (function () {
     };
     CompteUtilisateurOuvert.prototype.getAggregateId = function () {
         return this.idCompteUtilisateur();
+    };
+    CompteUtilisateurOuvert.prototype.getAggregateType = function () {
+        return 0 /* CompteUtilisateur */;
     };
     return CompteUtilisateurOuvert;
 })();

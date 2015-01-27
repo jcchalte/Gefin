@@ -1,3 +1,5 @@
+/// <reference path="../../../../../Scripts/GlobalReferences.d.ts"/>
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
 var ro = require("../../../ReadOnly");
 var InformationsSecondairesPropositionRepasRenseignees = (function () {
     function InformationsSecondairesPropositionRepasRenseignees(idPropositionRepas, description, heureMaxReservation, montantMax, livraisonComprise) {
@@ -12,6 +14,9 @@ var InformationsSecondairesPropositionRepasRenseignees = (function () {
     };
     InformationsSecondairesPropositionRepasRenseignees.prototype.getAggregateId = function () {
         return this.idPropositionRepas();
+    };
+    InformationsSecondairesPropositionRepasRenseignees.prototype.getAggregateType = function () {
+        return 1 /* PropositionRepas */;
     };
     return InformationsSecondairesPropositionRepasRenseignees;
 })();

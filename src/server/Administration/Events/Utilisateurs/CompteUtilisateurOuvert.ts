@@ -3,7 +3,7 @@ import ro = require("../../../ReadOnly");
 import Infrastructure = require("../../../Infrastructure/Infrastructure");
 import Login = require("../../Immutables/Utilisateur/Login");
 import Immutables = require("../../../Immutables/Immutables");
-
+import AggregateType = Infrastructure.Referentiel.AggregateType;
 export = CompteUtilisateurOuvert
 class CompteUtilisateurOuvert implements Infrastructure.IEvent {
 
@@ -21,4 +21,6 @@ class CompteUtilisateurOuvert implements Infrastructure.IEvent {
     }
 
     getAggregateId(): Immutables.Guid { return this.idCompteUtilisateur(); }
+
+    getAggregateType(): AggregateType { return AggregateType.CompteUtilisateur; }
 }

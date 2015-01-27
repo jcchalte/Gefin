@@ -13,13 +13,13 @@ describe("Guid >", () => {
 
     it("Guid can be return inner value", () => {
         var guid = new Immutables.Guid();
-        assert.ok(guid.innerValue());
+        assert.ok(guid.value());
     });
 
     it("two subsequent Guid calls should not share the same inner value", () => {
         var guid = new Immutables.Guid(),
             guid2 = new Immutables.Guid();
-        assert.ok(guid.innerValue() !== guid2.innerValue());
+        assert.ok(guid.value() !== guid2.value());
     });
 
     it("Guid can be constructed from a valid value", () => {

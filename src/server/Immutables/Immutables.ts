@@ -18,26 +18,26 @@ export class Titre {
 
 
 export class Guid {
-    private value: string;
+    private innerValue: string;
 
     constructor(innerValue?: string) {
         if (innerValue != null) {
             var uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
             if (!uuidRegex.test(innerValue))
                 throw Error("invalid UUID");
-            this.value = innerValue;
+            this.innerValue = innerValue;
 
         } else {
-            this.value = nodeUuid.v4();
+            this.innerValue = nodeUuid.v4();
         }
     }
 
-    public innerValue() {
-        return this.value;
+    public value() {
+        return this.innerValue;
     }
 
     public equals(other: Guid) {
-        return this.innerValue() === other.innerValue();
+        return this.value() === other.value();
     }
 }
 

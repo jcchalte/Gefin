@@ -3,7 +3,8 @@
 export module Referentiel {
     export enum AggregateType {
         CompteUtilisateur,
-        PropositionRepas
+        PropositionRepas,
+        TestAggregateType
     }
 
     //export enum CommandeType {
@@ -33,6 +34,7 @@ export module ServiceInjection {
 export interface IEvent {
     //getEventType(): Referentiel.EventType;
     getAggregateId(): Immutables.Guid;
+    getAggregateType(): Referentiel.AggregateType;
     equals(left: IEvent): boolean;
 }
 

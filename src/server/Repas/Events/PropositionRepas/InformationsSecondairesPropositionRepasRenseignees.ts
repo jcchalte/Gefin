@@ -31,4 +31,6 @@ class InformationsSecondairesPropositionRepasRenseignees implements Infrastructu
     }
 
     getAggregateId(): Immutables.Guid { return this.idPropositionRepas(); }
+
+    getAggregateType(): Infrastructure.Referentiel.AggregateType { return Infrastructure.Referentiel.AggregateType.PropositionRepas; }
 }

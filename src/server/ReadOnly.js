@@ -10,6 +10,7 @@ var ReadOnly;
             else
                 return value === left();
         };
+        result.isReadOnly = true;
         return result;
     }
     ReadOnly.field = field;

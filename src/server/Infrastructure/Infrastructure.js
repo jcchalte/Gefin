@@ -3,6 +3,7 @@ var Referentiel;
     (function (AggregateType) {
         AggregateType[AggregateType["CompteUtilisateur"] = 0] = "CompteUtilisateur";
         AggregateType[AggregateType["PropositionRepas"] = 1] = "PropositionRepas";
+        AggregateType[AggregateType["TestAggregateType"] = 2] = "TestAggregateType";
     })(Referentiel.AggregateType || (Referentiel.AggregateType = {}));
     var AggregateType = Referentiel.AggregateType;
 })(Referentiel = exports.Referentiel || (exports.Referentiel = {}));

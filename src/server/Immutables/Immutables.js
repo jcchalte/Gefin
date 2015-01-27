@@ -18,17 +18,17 @@ var Guid = (function () {
             var uuidRegex = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
             if (!uuidRegex.test(innerValue))
                 throw Error("invalid UUID");
-            this.value = innerValue;
+            this.innerValue = innerValue;
         }
         else {
-            this.value = nodeUuid.v4();
+            this.innerValue = nodeUuid.v4();
         }
     }
-    Guid.prototype.innerValue = function () {
-        return this.value;
+    Guid.prototype.value = function () {
+        return this.innerValue;
     };
     Guid.prototype.equals = function (other) {
-        return this.innerValue() === other.innerValue();
+        return this.value() === other.value();
     };
     return Guid;
 })();

@@ -1,3 +1,4 @@
+var Infrastructure = require("../../../Infrastructure/Infrastructure");
 var ro = require("../../../ReadOnly");
 var PropositionRepasDebutee = (function () {
     function PropositionRepasDebutee(idPropositionRepas, idUtilisateur, libelle, isPrive, invitations) {
@@ -12,6 +13,9 @@ var PropositionRepasDebutee = (function () {
     };
     PropositionRepasDebutee.prototype.getAggregateId = function () {
         return this.idPropositionRepas();
+    };
+    PropositionRepasDebutee.prototype.getAggregateType = function () {
+        return 1 /* PropositionRepas */;
     };
     return PropositionRepasDebutee;
 })();

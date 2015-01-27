@@ -42,5 +42,5 @@ class PropositionRepasPubliee implements Infrastructure.IEvent {
 
     getAggregateId(): Immutables.Guid { return this.idPropositionRepas(); }
 
-    //getEventType(): Infrastructure.Referentiel.EventType { return Infrastructure.Referentiel.EventType.PropositionRepasPubliee; }
+    getAggregateType(): Infrastructure.Referentiel.AggregateType { return Infrastructure.Referentiel.AggregateType.PropositionRepas; }
 }

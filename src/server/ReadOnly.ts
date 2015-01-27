@@ -3,6 +3,7 @@ module ReadOnly {
     export interface Field<TField> {
         (): TField;
         equals(left: Field<TField>);
+        isReadOnly: boolean;
     }
 
     export function field<TField>(value: TField): Field<TField> {
@@ -12,6 +13,7 @@ module ReadOnly {
                 return value['equals'](left());
             else return value === left();
         }
+        result.isReadOnly = true;
         return result;
     }
 }
