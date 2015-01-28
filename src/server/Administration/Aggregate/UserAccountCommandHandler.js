@@ -10,6 +10,8 @@ var ro = require("../../ReadOnly");
 var UserAccountCommandHandler;
 (function (UserAccountCommandHandler) {
     function handleCommandRegisterNewUserAccount(command) {
+        if (command.userLogin() === null)
+            throw new Error("The login is required");
         var userID = command.getAggregateId();
         var events = Infrastructure.IEventRepository.getInstance().getEventsForAggregate(userID);
         var state = new UserAccountState(events);

@@ -42,13 +42,25 @@ var TestThat;
             else
                 done();
         };
-        WhenContext.prototype.thenItFails = function (done) {
+        WhenContext.prototype.thenItFails = function (assertOnErrorOrDone, done) {
+            var realDone = done != null ? done : assertOnErrorOrDone;
+            var assertOnError = done != null ? assertOnErrorOrDone : null;
             try {
                 var commandDispatcher = Infrastructure.ICommandDispatcher.getInstance();
                 commandDispatcher.dispatchCommand(this.command);
             }
             catch (exception) {
-                done();
+                if (assertOnError != null) {
+                    if (assertOnError(exception)) {
+                        done();
+                    }
+                    else {
+                        fail("Exception " + exception + " does not respect the assertion");
+                    }
+                }
+                else {
+                    realDone();
+                }
             }
         };
         return WhenContext;

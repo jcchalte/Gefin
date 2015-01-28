@@ -9,6 +9,7 @@ module TestThat {
 
     export interface IWhenContext<TCommand> {
         then(expected: Infrastructure.IEvent, done: () => void);
+        thenItFails(assertOnError: (error: Error) => boolean, done: () => void);
         thenItFails(done: () => void);
     }
 
@@ -64,13 +65,26 @@ module TestThat {
             else done();
         }
 
-        public thenItFails(done: () => void) {
+        thenItFails(assertOnError: (error: Error) => boolean, done: () => void);
+        thenItFails(done: () => void);
+        thenItFails(assertOnErrorOrDone, done?: () => void) {
+            var realDone = done != null ? done : assertOnErrorOrDone;
+            var assertOnError = done != null ? assertOnErrorOrDone : null;
+
             try {
                 var commandDispatcher = Infrastructure.ICommandDispatcher.getInstance();
                 commandDispatcher.dispatchCommand(this.command);
             } catch (exception) {
-                done();
-            }
+                if (assertOnError != null) {
+                    if (assertOnError(exception)) {
+                        done();
+                    } else {
+                        fail("Exception " + exception + " does not respect the assertion");
+                    }
+                } else {
+                    realDone();
+                }
+            }    
         }
     }
 
