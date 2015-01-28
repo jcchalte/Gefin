@@ -5,37 +5,33 @@ import child_process = require("child_process");
 import http = require("http");
 require("should");
 
-describe("Smoke testing >", () => {
-    describe("Cas classiques >", () => {
-        var childProcess;
-        before((done) => {
-            childProcess = runServer("node Server 8082", () => {
-                done();
-            });
+describe("Smoke testing >",() => {
+    var childProcess;
+    before((done) => {
+        childProcess = runServer("node Server 8082",() => {
+            done();
         });
+    });
 
-
-
-        it('Can get homepage', (done) => {
-            httpTextGet("http://localhost:8082/", (response) => {
-                response.statusCode.should.equal(200, "La code de retour du smoke test n'est pas 200");
-                done();
-            });
+    it('Can get homepage',(done) => {
+        httpTextGet("http://localhost:8082/",(response) => {
+            response.statusCode.should.equal(200);
+            done();
         });
+    });
 
-        it('Can get 404', (done) => {
-            httpTextGet("http://localhost:8082/autrePageQuiNexistePas", (response) => {
-                response.statusCode.should.equal(404, "La code de retour du smoke test n'est pas 404");
-                done();
-            });
+    it('Can get 404',(done) => {
+        httpTextGet("http://localhost:8082/autrePageQuiNexistePas",(response) => {
+            response.statusCode.should.equal(404);
+            done();
         });
+    });
 
-        after((done) => {
-            childProcess.on("exit", () => {
-                done();
-            });
-            childProcess.kill();
+    after((done) => {
+        childProcess.on("exit",() => {
+            done();
         });
+        childProcess.kill();
     });
 });
 
@@ -47,27 +43,27 @@ function runServer(command: string, done: () => void): child_process.ChildProces
 
     childProcess.stdout.setEncoding('utf8');
 
-    childProcess.stdout.on("data", (chunk: string) => {
+    childProcess.stdout.on("data",(chunk: string) => {
         if (chunk.trim().indexOf("Server Ready to serve") >= 0)
             done();
     });
-    childProcess.stderr.on("data", (chunk) => {
+    childProcess.stderr.on("data",(chunk) => {
         console.log("stderr : " + chunk);
     });
-    childProcess.on("exit", () => {
+    childProcess.on("exit",() => {
     });
 
     return childProcess;
 }
 
 function httpTextGet(url: string, callback: (response: http.ServerResponse, responseData: string) => void) {
-    http.get(url, (response) => {
+    http.get(url,(response) => {
         var data = "";
         response.setEncoding('utf8');
-        response.on("data", (chunk: string) => {
+        response.on("data",(chunk: string) => {
             data += chunk;
         });
-        response.on("end", () => {
+        response.on("end",() => {
             callback(response, data);
         });
     });

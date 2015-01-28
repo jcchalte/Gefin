@@ -18,16 +18,16 @@ var Server = (function () {
     }
     Server.prototype.start = function (port, homepageFilePath, errorpageFilePath, done) {
         if (port === null || port === 0) {
-            throw "Le port est obligatoire";
+            throw Error("Port is mandatory");
         }
         if (homepageFilePath === null || homepageFilePath === "") {
-            throw "Le fichier à servir est obligatoire";
+            throw Error("homepage file is mandatory");
         }
         if (errorpageFilePath === null || errorpageFilePath === "") {
-            throw "Le fichier d'erreur est obligatoire";
+            throw Error("404 file should be mandatory");
         }
         if (this.isRunning)
-            throw "Le serveur est déjà démarré.";
+            throw Error("Server already started.");
         this.homepageFilePath = homepageFilePath;
         this.errorpageFilePath = errorpageFilePath;
         this.isRunning = true;
@@ -35,7 +35,7 @@ var Server = (function () {
     };
     Server.prototype.stop = function () {
         if (!this.isRunning)
-            throw "Le serveur n'est pas démarré.";
+            throw Error("Server not started.");
         this.isRunning = false;
         this.server.close();
     };

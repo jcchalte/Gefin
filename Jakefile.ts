@@ -82,36 +82,35 @@ module Configurations {
 
 module TypescriptTasks {
 
-    desc("Compilation des tous les typescript");
+    desc("All Typescript compilations");
     task("Typescript", ["TypescriptClient", "TypescriptServer"]);
 
-    desc("Compilation des typescript client");
+    desc("Typescript Client files compilation");
     task("TypescriptClient", ["TypescriptClientArgumentFile"], () => {
-        console.log("compilation Typescript client...");
+        console.log("Typescript client compilation...");
         Helpers.executeCommand("tsc --module AMD @tscClientFiles.txt", true, complete, fail);
     }, { async: true });
 
-    desc("Création @tscClientFiles");
+    desc("@tscClientFiles.txt file creation");
     task("TypescriptClientArgumentFile", [], () => {
         Helpers.writeFileNamesToFile("tscClientFiles.txt", ["src/client/**/*.ts"], ["node_modules"]);
     });
 
-    desc("Compilation des typescript server");
+    desc("Typescript Server files compilation");
     task("TypescriptServer", ["TypescriptServerArgumentFile"], () => {
-        console.log("compilation Typescript serveur...");
+        console.log("Typescript server compilation...");
         Helpers.executeCommand("tsc --module commonJS @tscServerFiles.txt", true, complete, fail);
     }, { async: true });
 
-    desc("Création @tscServerFiles");
+    desc("@tscServerFiles.txt creation");
     task("TypescriptServerArgumentFile", [], () => {
-
         Helpers.writeFileNamesToFile("tscServerFiles.txt", ["**/*.ts"], ["src/client", "node_modules", "packages"]);
     });
 }
 
 module CleanTasks {
     import GeneratedDir = Configurations.TempDirectories.generatedDir;
-    desc("Suppression des fichiers temporaires");
+    desc("Temporary files cleanup");
     task("clean", [], () => {
         jake.rmRf(GeneratedDir);
     });
@@ -137,7 +136,7 @@ module TestTasks {
     mocha.defineTask(
         {
             name: 'testServerBody',
-            description: 'Lancement des tests servers',
+            description: 'server testing',
             files: testsFileList.toArray(),
             mochaOptions: {
                 ui: 'bdd',
@@ -145,13 +144,13 @@ module TestTasks {
             },
             prerequisites: ["beforeTest", "Typescript"]
         });
-    desc("Lancement des tests serveurs");
-    task("testServerCode", ["testServerBody"], () => {
+
+    task("testServerCode", ["testServerBody"],() => {
         console.log("OK !");
         console.log();
     });
 
-    desc("Lancement des tests clients");
+    desc("client testing");
     task("testClient", ["Typescript"], () => {
         var karmaConfJSExpectedContent = "module.exports = function(config) {config.set(" + JSON.stringify(Configurations.Karma.runnerOptions) + ");};";
 
@@ -203,7 +202,7 @@ module TestTasks {
 
 module Utility {
     task("node", () => {
-        console.log("detection de Node.js...");
+        console.log("Node.js detection...");
 
         Helpers.executeCommand("node --version", false, (stdout: string) => {
             if (stdout.indexOf(Configurations.Node.desiredVersion) !== 0) {

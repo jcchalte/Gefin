@@ -5,17 +5,17 @@ var TestThat;
         return new GivenContext(events);
     }
     TestThat.given = given;
-    function when(commande) {
-        return new WhenContext(commande);
+    function when(command) {
+        return new WhenContext(command);
     }
     TestThat.when = when;
     var GivenContext = (function () {
         function GivenContext(events) {
             this.events = events;
         }
-        GivenContext.prototype.when = function (commande) {
+        GivenContext.prototype.when = function (command) {
             Infrastructure.IEventRepository.getInstance().commitEvents(this.events);
-            return new WhenContext(commande);
+            return new WhenContext(command);
         };
         GivenContext.prototype.and = function (events) {
             return new GivenContext(this.events.concat(events));
@@ -23,8 +23,8 @@ var TestThat;
         return GivenContext;
     })();
     var WhenContext = (function () {
-        function WhenContext(commande) {
-            this.commande = commande;
+        function WhenContext(command) {
+            this.command = command;
         }
         WhenContext.prototype.then = function (expected, done) {
             var success = false;
@@ -35,8 +35,8 @@ var TestThat;
                 }
             };
             Infrastructure.IEventDispatcher.getInstance().registerToEvent(expected.constructor, onEventTriggered);
-            var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
-            commandeDispatcher.dispatchCommand(this.commande);
+            var commandDispatcher = Infrastructure.ICommandDispatcher.getInstance();
+            commandDispatcher.dispatchCommand(this.command);
             if (!success)
                 fail();
             else
@@ -44,8 +44,8 @@ var TestThat;
         };
         WhenContext.prototype.thenItFails = function (done) {
             try {
-                var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
-                commandeDispatcher.dispatchCommand(this.commande);
+                var commandDispatcher = Infrastructure.ICommandDispatcher.getInstance();
+                commandDispatcher.dispatchCommand(this.command);
             }
             catch (exception) {
                 done();

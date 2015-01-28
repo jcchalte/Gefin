@@ -10,14 +10,14 @@ var BASE_PORT = 8080;
 var BASE_URL = "http://localhost:" + BASE_PORT;
 
 describe("Serveur >", () => {
-    describe("Cas classiques >", () => {
+    describe("OK cases >", () => {
         
         var myServer: server;
         var testDir = "generated/test";
         var testFile = testDir + "/test.html";
         var expectedData = "Ceci est dans un fichier";
         var testErrorFile = testDir + "/404.html";
-        var expectedData404 = "Erreur 404, contenu du fichier";
+        var expectedData404 = "404 error, file content";
 
         before((done) => {
             myServer = new server();
@@ -29,7 +29,7 @@ describe("Serveur >", () => {
             
         });
 
-        it('Server renvoit un fichier sur la page de garde', (done) => {
+        it('Server serves homepage', (done) => {
             
             httpTextGet(BASE_URL, (response, data) => {
                 response.statusCode.should.equal(200);
@@ -39,7 +39,7 @@ describe("Serveur >", () => {
             });
         });
 
-        it('Server renvoit un fichier sur index.html', (done) => {
+        it('Server serves hompage on /index.html', (done) => {
             httpTextGet(BASE_URL, (response, data) => {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
@@ -48,7 +48,7 @@ describe("Serveur >", () => {
             });
         });
 
-        it('Server renvoit une erreur 404 dans les autres pages', (done) => {
+        it('Server serves a 404 at other pages', (done) => {
             httpTextGet(BASE_URL+"/bargle", (response, data) => {
                 response.statusCode.should.equal(404);
                 data.indexOf(expectedData404).should.not.be.lessThan(0);
@@ -59,49 +59,49 @@ describe("Serveur >", () => {
 
         after(() => {
             fs.unlinkSync(testFile);
-            assert.ok(!fs.existsSync(testFile), "Le fichier " + testFile + " n'est pas supprimé");
+            assert.ok(!fs.existsSync(testFile), "the file " + testFile + " is not deleted");
             fs.unlinkSync(testErrorFile);
-            assert.ok(!fs.existsSync(testErrorFile), "Le fichier " + testFile + " n'est pas supprimé");
+            assert.ok(!fs.existsSync(testErrorFile), "The file " + testFile + " is not deleted");
             myServer.stop();
         });
 
     });
-    describe("Cas d'erreurs >", () => {
-        it("Démarrer un serveur sans port n'est pas possible", () => {
+    describe("Error cases >", () => {
+        it("Start a server without a port is not possible", () => {
             var myServer = new server();
             assert.throws(() => {
                 myServer.start(null, null, null, ()=>{});
-            }, "Un port est nécessaire");
+            }, "a port should be necessary");
         });
-        it("Démarrer un serveur sans un fichier à service n'est pas possible", () => {
+        it("Starting a server without a file to serve is not possible", () => {
             var myServer = new server();
             assert.throws(() => {
                 myServer.start(BASE_PORT, null, null, () => { });
-            }, "Une homepage est nécessaire");
+            }, "an homepage should be necessary");
         });
 
-        it("Démarrer un serveur sans un fichier d'erreur à service n'est pas possible", () => {
+        it("Starting a server without a 404 file is not possible", () => {
             var myServer = new server();
             assert.throws(() => {
                 myServer.start(BASE_PORT, "test.html", null, () => { });
-            }, "Un fichier d'erreur est nécessaire");
+            }, "a 404 should be necessary");
         });
 
-        it("Démarrer un serveur alors qu\'il est déjà démarré n'est pas possible", () => {
+        it("Starting a server already started should not be possible", () => {
             var myServer = new server();
             myServer.start(BASE_PORT, "test.html", "404.html", () => { });
             assert.throws(() => {
                 myServer.start(BASE_PORT, "test.html", "404.html", () => { });
-            }, "Il ne doit pas être possible de redémarrer le serveur s'il est déjà démarré");
+            }, "It should not be possible to start the server if already started");
 
             myServer.stop();
         });
 
-        it("Arrêter un serveur avant qu\'il ne soit démarré n'est pas possible", () => {
+        it("Stoping a server without having it started is not possible", () => {
             var myServer = new server();
             assert.throws(() => {
                 myServer.stop();
-            }, "Il ne doit pas être possible d'arrêter le serveur sans l'avoir démarré au préalable");
+            }, "It should not be possible to start the server without starting it first");
         });
     });
 

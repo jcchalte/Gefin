@@ -1,8 +1,8 @@
 var Referentiel;
 (function (Referentiel) {
     (function (AggregateType) {
-        AggregateType[AggregateType["CompteUtilisateur"] = 0] = "CompteUtilisateur";
-        AggregateType[AggregateType["PropositionRepas"] = 1] = "PropositionRepas";
+        AggregateType[AggregateType["UserAccount"] = 0] = "UserAccount";
+        AggregateType[AggregateType["MealProposal"] = 1] = "MealProposal";
         AggregateType[AggregateType["TestAggregateType"] = 2] = "TestAggregateType";
     })(Referentiel.AggregateType || (Referentiel.AggregateType = {}));
     var AggregateType = Referentiel.AggregateType;
@@ -23,7 +23,6 @@ function commitEvents(events) {
     });
 }
 exports.commitEvents = commitEvents;
-// ReSharper disable once InconsistentNaming
 var ICommandDispatcher;
 (function (ICommandDispatcher) {
     ICommandDispatcher.commandDispatcher;
@@ -59,7 +58,7 @@ var StateBase = (function () {
             this[methodName](event);
         }
         else {
-            console.log(methodName + ' non trouvé');
+            console.log(methodName + ' not found');
         }
     };
     return StateBase;

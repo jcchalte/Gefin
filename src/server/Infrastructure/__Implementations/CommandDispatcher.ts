@@ -1,36 +1,31 @@
 ﻿import Infrastructure = require("../Infrastructure");
-import PropositionRepas = require("../../Repas/Aggregate/PropositionRepas");
-import CompteUtilisateur = require("../../Administration/Aggregate/CompteUtilisateur");
+import MealProposalCommandHandler = require("../../MealProposal/Aggregate/MealProposalCommandHandler");
+import UserAccountCommandHandler = require("../../Administration/Aggregate/UserAccountCommandHandler");
 
 export = CommandDispatcher
 class CommandDispatcher implements Infrastructure.ICommandDispatcher {
 
+    public dispatchCommand(command: Infrastructure.ICommand): void {
 
-    public dispatchCommand(commande: Infrastructure.ICommande): void {
+        var aggregateType = command.getAssociatedAggregateType();
 
-        //1. Charger depuis un repository d'event ou créer l'aggrégat correspondant à la commande
-        //2. Appeler la méthode "Handle" correspondant à la commande
-        //      - Cette méthode regarde par rapport à ses projections si la commande est envisageable
-        //      - En fonction de ses projections, elle rajoute des events dans la liste d'event à publier
-        //3. On "Sauvegarde" les évènements à publier, c'est à dire qu'on va trigger tous les handlers et qu'on sauvegarde dans un repository   
-        var aggregateType = commande.getAssociatedAggregateType();
-
-        var moduleAAppeler: any;
+        var commandHandlerThatManageThisAggregateType: any;
         switch (aggregateType) {
-            case Infrastructure.Referentiel.AggregateType.PropositionRepas:
-                moduleAAppeler = PropositionRepas;
+            case Infrastructure.Referentiel.AggregateType.MealProposal:
+                commandHandlerThatManageThisAggregateType = MealProposalCommandHandler;
                 break;
-            case Infrastructure.Referentiel.AggregateType.CompteUtilisateur:
-                moduleAAppeler = CompteUtilisateur;
+            case Infrastructure.Referentiel.AggregateType.UserAccount:
+                commandHandlerThatManageThisAggregateType = UserAccountCommandHandler;
                 break;
             default:
                 throw new Error("NotImplementedException");
         }
-        var methodeAAppeler = "handleCommande" + (<any>commande.constructor).name;
 
-        if (moduleAAppeler[methodeAAppeler] == null || typeof moduleAAppeler[methodeAAppeler] !== "function")
-            throw new Error("Le module " + moduleAAppeler.constructor.name + " n'implémente pas la méthode " + methodeAAppeler);
-        moduleAAppeler[methodeAAppeler].call(this, commande);
+        var handleCommandMethodName= "handleCommand" + (<any>command.constructor).name;
+
+        if (commandHandlerThatManageThisAggregateType[handleCommandMethodName] == null || typeof commandHandlerThatManageThisAggregateType[handleCommandMethodName] !== "function")
+            throw new Error("The command handler module " + commandHandlerThatManageThisAggregateType.constructor.name + " does not implement the method " + handleCommandMethodName);
+        commandHandlerThatManageThisAggregateType[handleCommandMethodName].call(this, command);
     }
 
 

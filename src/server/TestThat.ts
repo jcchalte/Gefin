@@ -4,10 +4,10 @@ export = TestThat;
 module TestThat {
     export interface IGivenContext {
         and(events: Infrastructure.IEvent[]): IGivenContext;
-        when<TCommande>(commande: TCommande): IWhenContext<TCommande>;
+        when<TCommand>(command: TCommand): IWhenContext<TCommand>;
     }
 
-    export interface IWhenContext<TCommande> {
+    export interface IWhenContext<TCommand> {
         then(expected: Infrastructure.IEvent, done: () => void);
         thenItFails(done: () => void);
     }
@@ -16,8 +16,8 @@ module TestThat {
         return new GivenContext(events);
     }
 
-    export function when<TCommande>(commande: Infrastructure.ICommande): IWhenContext<TCommande> {
-        return new WhenContext(commande);
+    export function when<TCommand>(command: Infrastructure.ICommand): IWhenContext<TCommand> {
+        return new WhenContext(command);
     }
 
     class GivenContext implements IGivenContext {
@@ -27,9 +27,9 @@ module TestThat {
             this.events = events;
         }
 
-        when<TCommande>(commande: Infrastructure.ICommande): IWhenContext<TCommande> {
+        when<TCommand>(command: Infrastructure.ICommand): IWhenContext<TCommand> {
             Infrastructure.IEventRepository.getInstance().commitEvents(this.events);
-            return new WhenContext(commande);
+            return new WhenContext(command);
         }
 
         and(events: Infrastructure.IEvent[]): IGivenContext {
@@ -37,11 +37,11 @@ module TestThat {
         }
     }
 
-    class WhenContext<TCommande> implements IWhenContext<TCommande> {
-        private commande: Infrastructure.ICommande;
+    class WhenContext<TCommand> implements IWhenContext<TCommand> {
+        private command: Infrastructure.ICommand;
 
-        constructor(commande: Infrastructure.ICommande) {
-            this.commande = commande;
+        constructor(command: Infrastructure.ICommand) {
+            this.command = command;
         }
 
         public then(expected: Infrastructure.IEvent, done: () => void) {
@@ -56,8 +56,8 @@ module TestThat {
             }
             Infrastructure.IEventDispatcher.getInstance().registerToEvent(expected.constructor, onEventTriggered);
 
-            var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
-            commandeDispatcher.dispatchCommand(this.commande);
+            var commandDispatcher = Infrastructure.ICommandDispatcher.getInstance();
+            commandDispatcher.dispatchCommand(this.command);
 
             if (!success)
                 fail();
@@ -66,8 +66,8 @@ module TestThat {
 
         public thenItFails(done: () => void) {
             try {
-                var commandeDispatcher = Infrastructure.ICommandDispatcher.getInstance();
-                commandeDispatcher.dispatchCommand(this.commande);
+                var commandDispatcher = Infrastructure.ICommandDispatcher.getInstance();
+                commandDispatcher.dispatchCommand(this.command);
             } catch (exception) {
                 done();
             }

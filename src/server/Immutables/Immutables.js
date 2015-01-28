@@ -1,17 +1,17 @@
 var nodeUuid = require("node-uuid");
-var Titre = (function () {
-    function Titre(value) {
+var Title = (function () {
+    function Title(value) {
         this.innerValue = value;
     }
-    Titre.prototype.value = function () {
+    Title.prototype.value = function () {
         return this.innerValue;
     };
-    Titre.prototype.equals = function (left) {
+    Title.prototype.equals = function (left) {
         return this.value() === left.value();
     };
-    return Titre;
+    return Title;
 })();
-exports.Titre = Titre;
+exports.Title = Title;
 var Guid = (function () {
     function Guid(innerValue) {
         if (innerValue != null) {
@@ -46,24 +46,37 @@ var Description = (function () {
     return Description;
 })();
 exports.Description = Description;
-var Heure = (function () {
-    function Heure(heure, minutes) {
-        this.heure = heure;
+var Time = (function () {
+    function Time(hour, minutes) {
+        this.hours = hour;
         this.minutes = minutes;
     }
-    Heure.prototype.equals = function (left) {
-        return this.heure === left.heure && this.minutes === left.minutes;
+    Time.prototype.equals = function (left) {
+        return this.hours === left.hours && this.minutes === left.minutes;
     };
-    return Heure;
+    return Time;
 })();
-exports.Heure = Heure;
+exports.Time = Time;
 var Euros = (function () {
-    function Euros(montant) {
-        this.montant = montant;
+    function Euros(amount) {
+        this.amount = amount;
     }
     Euros.prototype.equals = function (left) {
-        return this.montant === left.montant;
+        return this.amount === left.amount;
     };
     return Euros;
 })();
 exports.Euros = Euros;
+var Login = (function () {
+    function Login(value) {
+        this.innerValue = value;
+    }
+    Login.prototype.value = function () {
+        return this.innerValue;
+    };
+    Login.prototype.equals = function (left) {
+        return this.value() === left.value();
+    };
+    return Login;
+})();
+exports.Login = Login;

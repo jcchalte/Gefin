@@ -1,6 +1,6 @@
 ﻿import nodeUuid = require("node-uuid");
 
-export class Titre {
+export class Title {
     private innerValue: string;
 
     constructor(value: string) {
@@ -11,11 +11,10 @@ export class Titre {
         return this.innerValue;
     }
 
-    public equals(left: Titre) {
+    public equals(left: Title) {
         return this.value() === left.value();
     }
 }
-
 
 export class Guid {
     private innerValue: string;
@@ -57,30 +56,44 @@ export class Description {
     }
 }
 
-export class Heure {
-    private heure: number;
+export class Time {
+    private hours: number;
     private minutes: number;
 
-    constructor(heure: number, minutes:number) {
-        this.heure = heure;
+    constructor(hour: number, minutes:number) {
+        this.hours = hour;
         this.minutes = minutes;
     }
 
-    public equals(left: Heure) {
-        return this.heure === left.heure && this.minutes === left.minutes;
+    public equals(left: Time) {
+        return this.hours === left.hours && this.minutes === left.minutes;
     }
 }
 
-
 export class Euros {
-    private montant: number;
+    private amount: number;
 
-    constructor(montant: number) {
-        this.montant = montant;
+    constructor(amount: number) {
+        this.amount = amount;
     }
 
     public equals(left: Euros) {
-        return this.montant === left.montant;
+        return this.amount === left.amount;
     }
 }
 
+export class Login {
+    private innerValue: string;
+
+    constructor(value: string) {
+        this.innerValue = value;
+    }
+
+    public value() {
+        return this.innerValue;
+    }
+
+    public equals(left: Login) {
+        return this.value() === left.value();
+    }
+}

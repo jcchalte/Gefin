@@ -2,24 +2,10 @@
 
 export module Referentiel {
     export enum AggregateType {
-        CompteUtilisateur,
-        PropositionRepas,
+        UserAccount,
+        MealProposal,
         TestAggregateType
     }
-
-    //export enum CommandeType {
-    //    OuvrirCompteUtilisateur,
-    //    DebuterPropositionRepas,
-    //    RenseignerInformationSecondairesPropositionRepas,
-    //    PublierPropositionRepas
-    //}
-
-    //export enum EventType {
-    //    CompteUtilisateurOuvert,
-    //    PropositionRepasDebutee,
-    //    InformationsSecondairesPropositionRepasRenseignees,
-    //    PropositionRepasPubliee
-    //}
 }
 
 export module ServiceInjection {
@@ -32,16 +18,13 @@ export module ServiceInjection {
 
 
 export interface IEvent {
-    //getEventType(): Referentiel.EventType;
     getAggregateId(): Immutables.Guid;
     getAggregateType(): Referentiel.AggregateType;
     equals(left: IEvent): boolean;
 }
 
-export interface ICommande {
-    //getAggregateId(): Immutables.Guid;
+export interface ICommand {
     getAssociatedAggregateType(): Referentiel.AggregateType;
-    //getCommandType(): Referentiel.CommandeType;
 }
 
 export function commitEvents(events: IEvent[]) {
@@ -52,10 +35,9 @@ export function commitEvents(events: IEvent[]) {
 }
 
 export interface ICommandDispatcher {
-    dispatchCommand(commande: ICommande): void;
+    dispatchCommand(command: ICommand): void;
 }
 
-// ReSharper disable once InconsistentNaming
 export module ICommandDispatcher {
     export var commandDispatcher: ICommandDispatcher;
 
@@ -101,7 +83,7 @@ export class StateBase {
         if (this[methodName] != null) {
             this[methodName](event);
         } else {
-            console.log(methodName+' non trouvé');
+            console.log(methodName+' not found');
         }
     }
 }

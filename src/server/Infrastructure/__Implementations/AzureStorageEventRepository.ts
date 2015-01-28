@@ -5,10 +5,6 @@ export = AzureStorageEventRepository
 class AzureStorageEventRepository implements Infrastructure.IEventRepository {
     private database : Array<IEventLine>;
 
-    constructor() {
-       
-    }
-
     getEventsForAggregate(aggregateId: Immutables.Guid): Infrastructure.IEvent[] {
         return this.database.filter((item) => {
             return item.aggregateId.equals(aggregateId);
