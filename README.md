@@ -7,7 +7,7 @@ Gefin repository. A journey in TDD, CQRS, Event sourcing and automation in Types
 * install Typescript 1.4
 	* remove link to old typescript folder in PATH if needed
 * (optional) install a virtualization solution in order to have (at least ) IE8, IE9, IE10, IE11, Chrome and firefox browsers able to connect to your local machine
-	* VM provided at moderne.ie works well for that
+	* VM provided at modern.ie works well for that
 * start Karma (karma start)
 * join http://localhost:9876 (or http://10.0.2.2:9876 in virtualbox VM) with at least one browser (preferably all of them)
 * then build using Jake : jake
