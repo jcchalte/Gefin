@@ -10,8 +10,13 @@ task("default", ["Typescript", "testServerCode", "testClient", "node"], () => {
 
 module Configurations {
     export module Node {
-        export var desiredVersion = "v0.10.25";
+        export var desiredVersion = "v0.10.";
     }
+
+    export module Typescript {
+        export var desiredVersion = "1.4.0.0";
+    }
+
 
     export module TempDirectories {
         export var generatedDir = "generated";
@@ -86,7 +91,7 @@ module TypescriptTasks {
     task("Typescript", ["TypescriptClient", "TypescriptServer"]);
 
     desc("Typescript Client files compilation");
-    task("TypescriptClient", ["TypescriptClientArgumentFile"], () => {
+    task("TypescriptClient", ["TypescriptClientArgumentFile", "TypescriptVersion"], () => {
         console.log("Typescript client compilation...");
         Helpers.executeCommand("tsc --module AMD @tscClientFiles.txt", true, complete, fail);
     }, { async: true });
@@ -97,7 +102,7 @@ module TypescriptTasks {
     });
 
     desc("Typescript Server files compilation");
-    task("TypescriptServer", ["TypescriptServerArgumentFile"], () => {
+    task("TypescriptServer", ["TypescriptServerArgumentFile","TypescriptVersion"], () => {
         console.log("Typescript server compilation...");
         Helpers.executeCommand("tsc --module commonJS @tscServerFiles.txt", true, complete, fail);
     }, { async: true });
@@ -106,6 +111,16 @@ module TypescriptTasks {
     task("TypescriptServerArgumentFile", [], () => {
         Helpers.writeFileNamesToFile("tscServerFiles.txt", ["**/*.ts"], ["src/client", "node_modules", "packages"]);
     });
+
+    desc("Typescript Version verification");
+    task("TypescriptVersion", [], () => {
+        console.log("Typescript version verification...");
+        Helpers.executeCommand("tsc -v", true,(out, err) => {
+            if (out.indexOf(Configurations.Typescript.desiredVersion) !== -1)
+                complete();
+            else fail("Typescript " + Configurations.Typescript.desiredVersion+" is required");
+        }, fail);
+    }, { async: true });
 }
 
 module CleanTasks {

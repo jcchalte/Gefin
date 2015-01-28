@@ -9,8 +9,12 @@ var Configurations;
 (function (Configurations) {
     var Node;
     (function (Node) {
-        Node.desiredVersion = "v0.10.25";
+        Node.desiredVersion = "v0.10.";
     })(Node = Configurations.Node || (Configurations.Node = {}));
+    var Typescript;
+    (function (Typescript) {
+        Typescript.desiredVersion = "1.4.0.0";
+    })(Typescript = Configurations.Typescript || (Configurations.Typescript = {}));
     var TempDirectories;
     (function (TempDirectories) {
         TempDirectories.generatedDir = "generated";
@@ -78,7 +82,7 @@ var TypescriptTasks;
     desc("All Typescript compilations");
     task("Typescript", ["TypescriptClient", "TypescriptServer"]);
     desc("Typescript Client files compilation");
-    task("TypescriptClient", ["TypescriptClientArgumentFile"], function () {
+    task("TypescriptClient", ["TypescriptClientArgumentFile", "TypescriptVersion"], function () {
         console.log("Typescript client compilation...");
         Helpers.executeCommand("tsc --module AMD @tscClientFiles.txt", true, complete, fail);
     }, { async: true });
@@ -87,7 +91,7 @@ var TypescriptTasks;
         Helpers.writeFileNamesToFile("tscClientFiles.txt", ["src/client/**/*.ts"], ["node_modules"]);
     });
     desc("Typescript Server files compilation");
-    task("TypescriptServer", ["TypescriptServerArgumentFile"], function () {
+    task("TypescriptServer", ["TypescriptServerArgumentFile", "TypescriptVersion"], function () {
         console.log("Typescript server compilation...");
         Helpers.executeCommand("tsc --module commonJS @tscServerFiles.txt", true, complete, fail);
     }, { async: true });
@@ -95,6 +99,16 @@ var TypescriptTasks;
     task("TypescriptServerArgumentFile", [], function () {
         Helpers.writeFileNamesToFile("tscServerFiles.txt", ["**/*.ts"], ["src/client", "node_modules", "packages"]);
     });
+    desc("Typescript Version verification");
+    task("TypescriptVersion", [], function () {
+        console.log("Typescript version verification...");
+        Helpers.executeCommand("tsc -v", true, function (out, err) {
+            if (out.indexOf(Configurations.Typescript.desiredVersion) !== -1)
+                complete();
+            else
+                fail("Typescript " + Configurations.Typescript.desiredVersion + " is required");
+        }, fail);
+    }, { async: true });
 })(TypescriptTasks || (TypescriptTasks = {}));
 var CleanTasks;
 (function (CleanTasks) {
