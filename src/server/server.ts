@@ -3,37 +3,39 @@
 export = Server
 import http = require("http");
 import fs = require("fs");
+var send = require("send");
+import url = require("url");
 
 class Server {
     private server: http.Server;
 
     private isRunning: boolean;
 
-    private homepageFilePath: string;
+    private rootDirectory: string;
 
     private errorpageFilePath: string;
 
     constructor() {
         this.server = http.createServer();
         this.server.on("request", (request, response) => {
-            
-            if (request.url === "/" || request.url === "/Index") {
-                this.serveFile(response, this.homepageFilePath);
-            } else {
-                response.statusCode = 404;
-                this.serveFile(response, this.errorpageFilePath);
-            }
+            send(request, request.url, {
+                root: this.rootDirectory
+            }).on("error", (err) => {
+                    response.statusCode = err.status || 500;
+                    this.serveFile(response, this.errorpageFilePath);
+                })
+                .pipe(response);
         });
         this.isRunning = false;
     }
 
-    public start(port: number, homepageFilePath: string, errorpageFilePath:string, done:()=>void) {
+    public start(port: number, rootDirectory: string, errorpageFilePath: string, done: () => void) {
 
         if (port === null || port === 0) {
             throw Error("Port is mandatory");
         }
-        if (homepageFilePath === null || homepageFilePath === "") {
-            throw Error("homepage file is mandatory");
+        if (rootDirectory === null || rootDirectory === "") {
+            throw Error("root directory is mandatory");
         }
         if (errorpageFilePath === null || errorpageFilePath === "") {
             throw Error("404 file should be mandatory");
@@ -41,7 +43,7 @@ class Server {
 
         if (this.isRunning)
             throw Error("Server already started.");
-        this.homepageFilePath = homepageFilePath;
+        this.rootDirectory = rootDirectory;
         this.errorpageFilePath = errorpageFilePath;
         this.isRunning = true;
         this.server.listen(port, done);

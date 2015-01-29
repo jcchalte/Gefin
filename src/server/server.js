@@ -1,34 +1,34 @@
 /// <reference path="../../Scripts/GlobalReferences.d.ts"/>
 var http = require("http");
 var fs = require("fs");
+var send = require("send");
 var Server = (function () {
     function Server() {
         var _this = this;
         this.server = http.createServer();
         this.server.on("request", function (request, response) {
-            if (request.url === "/" || request.url === "/Index") {
-                _this.serveFile(response, _this.homepageFilePath);
-            }
-            else {
-                response.statusCode = 404;
+            send(request, request.url, {
+                root: _this.rootDirectory
+            }).on("error", function (err) {
+                response.statusCode = err.status || 500;
                 _this.serveFile(response, _this.errorpageFilePath);
-            }
+            }).pipe(response);
         });
         this.isRunning = false;
     }
-    Server.prototype.start = function (port, homepageFilePath, errorpageFilePath, done) {
+    Server.prototype.start = function (port, rootDirectory, errorpageFilePath, done) {
         if (port === null || port === 0) {
             throw Error("Port is mandatory");
         }
-        if (homepageFilePath === null || homepageFilePath === "") {
-            throw Error("homepage file is mandatory");
+        if (rootDirectory === null || rootDirectory === "") {
+            throw Error("root directory is mandatory");
         }
         if (errorpageFilePath === null || errorpageFilePath === "") {
             throw Error("404 file should be mandatory");
         }
         if (this.isRunning)
             throw Error("Server already started.");
-        this.homepageFilePath = homepageFilePath;
+        this.rootDirectory = rootDirectory;
         this.errorpageFilePath = errorpageFilePath;
         this.isRunning = true;
         this.server.listen(port, done);

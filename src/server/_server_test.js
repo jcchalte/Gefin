@@ -10,19 +10,19 @@ describe("Serveur >", function () {
     describe("OK cases >", function () {
         var myServer;
         var testDir = "generated/test";
-        var testFile = testDir + "/test.html";
+        var testFile = testDir + "/index.html";
         var expectedData = "Ceci est dans un fichier";
         var testErrorFile = testDir + "/404.html";
         var expectedData404 = "404 error, file content";
         before(function (done) {
             myServer = new server();
-            myServer.start(BASE_PORT, testFile, testErrorFile, function () {
+            myServer.start(BASE_PORT, testDir, testErrorFile, function () {
                 fs.writeFileSync(testFile, expectedData);
                 fs.writeFileSync(testErrorFile, expectedData404);
                 done();
             });
         });
-        it('Server serves homepage', function (done) {
+        it('Server serves hompage on /index.html', function (done) {
             httpTextGet(BASE_URL, function (response, data) {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
@@ -30,7 +30,7 @@ describe("Serveur >", function () {
                 done();
             });
         });
-        it('Server serves hompage on /index.html', function (done) {
+        it('Server serves homepage', function (done) {
             httpTextGet(BASE_URL, function (response, data) {
                 response.statusCode.should.equal(200);
                 data.indexOf(expectedData).should.not.be.lessThan(0);
@@ -72,16 +72,16 @@ describe("Serveur >", function () {
         it("Starting a server without a 404 file is not possible", function () {
             var myServer = new server();
             assert.throws(function () {
-                myServer.start(BASE_PORT, "test.html", null, function () {
+                myServer.start(BASE_PORT, "/", null, function () {
                 });
             }, "a 404 should be necessary");
         });
         it("Starting a server already started should not be possible", function () {
             var myServer = new server();
-            myServer.start(BASE_PORT, "test.html", "404.html", function () {
+            myServer.start(BASE_PORT, "/", "404.html", function () {
             });
             assert.throws(function () {
-                myServer.start(BASE_PORT, "test.html", "404.html", function () {
+                myServer.start(BASE_PORT, "/", "404.html", function () {
                 });
             }, "It should not be possible to start the server if already started");
             myServer.stop();

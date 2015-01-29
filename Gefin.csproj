@@ -3243,7 +3243,7 @@
     <Content Include="node_modules\should\should.min.js" />
     <Content Include="Scripts\array.generics.js" />
     <Content Include="src\server\Views\404.html" />
-    <Content Include="src\server\Views\homepage.html" />
+    <Content Include="src\server\Views\index.html" />
     <Content Include="test-main.js" />
   </ItemGroup>
   <ItemGroup>
@@ -3263,6 +3263,7 @@
     <TypeScriptCompile Include="Scripts\typings\mocha\mocha.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node-uuid\node-uuid.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\node\node-0.11.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\send\send.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\should\should.d.ts" />
     <TypeScriptCompile Include="Server.ts" />
     <TypeScriptCompile Include="src\client\client.ts" />
@@ -4911,6 +4912,9 @@
     <Content Include="node_modules\azure-storage\package.json" />
     <Content Include="node_modules\azure-storage\README.md" />
     <Content Include="node_modules\azure-storage\test\framework\preamble.template" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
